@@ -2,6 +2,7 @@ package ca.mcgillcssa.cssabackend.controller;
 
 import java.util.Optional;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,8 @@ public class MemberController {
       return ResponseEntity.ok(new MemberDTO(newMember));
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
+    } catch (DataAccessException e) {
+      return ResponseEntity.internalServerError().body(e.getMessage());
     }
   }
 
