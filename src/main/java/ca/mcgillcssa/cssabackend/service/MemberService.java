@@ -84,7 +84,7 @@ public class MemberService {
     return memberRepository.findBySchoolEmail(personalEmail);
   }
 
-  public void deleteByPersonalEmail(String personalEmail) {
-    memberRepository.deleteByPersonalEmail(personalEmail);
+  public boolean deleteByPersonalEmail(String personalEmail) {
+    return memberRepository.deleteByPersonalEmail(personalEmail);
   }
 }

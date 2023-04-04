@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.mongodb.client.result.DeleteResult;
+
 import ca.mcgillcssa.cssabackend.model.Member;
 
 @Repository
@@ -32,8 +34,9 @@ public class MemberRepository {
     return Optional.ofNullable(mongoTemplate.findOne(query, Member.class));
   }
 
-  public void deleteByPersonalEmail(String personalEmail) {
+  public boolean deleteByPersonalEmail(String personalEmail) {
     Query query = new Query(Criteria.where("personalEmail").is(personalEmail));
-    mongoTemplate.remove(query, Member.class);
+    DeleteResult result = mongoTemplate.remove(query, Member.class);
+    return result.wasAcknowledged() && result.getDeletedCount() > 0;
   }
 }
