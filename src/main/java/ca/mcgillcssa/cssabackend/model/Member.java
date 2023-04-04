@@ -4,43 +4,26 @@ import java.time.LocalDate;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
-import lombok.Builder.Default;
 
 @Document(collection = "members")
 @Data
-@Builder
+@AllArgsConstructor
 @ToString
 public class Member {
   private String name;
-
-  @Default
-  private String pseudo = "";
-
+  private String pseudo;
   private String personalEmail;
-
-  @Default
-  private String schoolEmail = "";
-
-  @Default
-  private String wechatId = "";
-
-  @Default
-  private String caPhoneNum = "";
-
-  @Default
-  private String cnPhoneNum = "";
-
+  private String schoolEmail;
+  private String wechatId;
+  private String caPhoneNum;
+  private String cnPhoneNum;
   private LocalDate birthDay;
-
-  @Default
-  private ClothSize clothSize = ClothSize.NA;
-
   private Department department;
-
   private Position position;
+  private ClothSize clothSize;
 
   public enum ClothSize {
     NA,
@@ -80,7 +63,7 @@ public class Member {
     VICEPRESIDENT,
     DIRECTOR,
     EXECUTIVE,
-    SADVISOR;
+    ADVISOR;
 
     @Override
     public String toString() {

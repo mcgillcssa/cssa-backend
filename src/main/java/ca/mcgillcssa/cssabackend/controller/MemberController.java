@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.mcgillcssa.cssabackend.dto.MemberDTO;
 import ca.mcgillcssa.cssabackend.model.Member;
 import ca.mcgillcssa.cssabackend.service.MemberService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @RestController
 @RequestMapping("/members")
@@ -25,10 +29,17 @@ public class MemberController {
   }
 
   @PostMapping("/")
-  public ResponseEntity<Member> createMember(@RequestBody MemberRequestBody requestBody) {
-    Member newMember = memberService.createMember(requestBody.getName(), requestBody.getPersonalEmail(),
-        requestBody.getBirthDay(), requestBody.getDepartment(), requestBody.getPosition());
-    return ResponseEntity.ok(newMember);
+  public ResponseEntity<?> createMember(@RequestBody MemberRequestBody requestBody) {
+    try {
+      Member newMember = memberService.createMember(requestBody.getName(), requestBody.getPseudo(),
+          requestBody.getPersonalEmail(), requestBody.getSchoolEmail(), requestBody.getWechatId(),
+          requestBody.getCaPhoneNum(), requestBody.getCnPhoneNum(), requestBody.getBirthDay(),
+          requestBody.getDepartment(), requestBody.getPosition(), requestBody.getClothSize());
+
+      return ResponseEntity.ok(new MemberDTO(newMember));
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
   }
 
   @GetMapping("/{personalEmail}")
@@ -44,52 +55,20 @@ public class MemberController {
     return ResponseEntity.noContent().build();
   }
 
-  public static class MemberRequestBody {
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public class MemberRequestBody {
     private String name;
+    private String pseudo;
     private String personalEmail;
+    private String schoolEmail;
+    private String wechatId;
+    private String caPhoneNum;
+    private String cnPhoneNum;
     private String birthDay;
-
     private String department;
     private String position;
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getPersonalEmail() {
-      return personalEmail;
-    }
-
-    public void setPersonalEmail(String personalEmail) {
-      this.personalEmail = personalEmail;
-    }
-
-    public String getBirthDay() {
-      return birthDay;
-    }
-
-    public void setBirthDay(String birthDay) {
-      this.birthDay = birthDay;
-    }
-
-    public String getDepartment() {
-      return department;
-    }
-
-    public void setDepartment(String department) {
-      this.department = department;
-    }
-
-    public String getPosition() {
-      return position;
-    }
-
-    public void setPosition(String position) {
-      this.position = position;
-    }
+    private String clothSize;
   }
 }
