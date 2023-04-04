@@ -22,6 +22,12 @@ public class MemberService {
       String caPhoneNum, String cnPhoneNum, String birthDayStr,
       String departmentStr, String positionStr, String clothSizeStr) throws IllegalArgumentException {
 
+    if (name == null || personalEmail == null || schoolEmail == null || birthDayStr == null || departmentStr == null
+        || positionStr == null) {
+      throw new IllegalArgumentException(
+          "Missing information: name, personal email, mcgill email, birthday, department and position are required.");
+    }
+
     if (findByPersonalEmail(personalEmail).isPresent()) {
       throw new IllegalArgumentException("A member with the personal email " + personalEmail + " already exists.");
     }
@@ -29,12 +35,6 @@ public class MemberService {
     if (findBySchoolEmail(personalEmail).isPresent()) {
       throw new IllegalArgumentException("A member with the school email " + personalEmail + " already exists.");
     }
-
-    pseudo = pseudo == null ? "" : pseudo;
-    wechatId = wechatId == null ? "" : wechatId;
-    caPhoneNum = caPhoneNum == null ? "" : caPhoneNum;
-    cnPhoneNum = cnPhoneNum == null ? "" : cnPhoneNum;
-    clothSizeStr = clothSizeStr == null ? "M" : clothSizeStr;
 
     LocalDate birthDay;
     try {
@@ -65,14 +65,9 @@ public class MemberService {
       throw new IllegalArgumentException(clothSizeStr + " is not a valid clothing size.");
     }
 
-    Member newMember;
-    try {
-      newMember = new Member(name, pseudo, personalEmail, schoolEmail, wechatId, caPhoneNum, cnPhoneNum, birthDay,
-          department, position, clothSize);
-    } catch (NullPointerException e) {
-      throw new IllegalArgumentException(
-          "Missing information: name, personal email, mcgill email, birthday, department and position are required field.");
-    }
+    Member newMember = new Member(name, pseudo, personalEmail, schoolEmail, wechatId, caPhoneNum, cnPhoneNum, birthDay,
+        department, position, clothSize);
+
     return memberRepository.createMember(newMember);
   }
 
