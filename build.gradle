@@ -14,6 +14,11 @@ configurations {
 	}
 }
 
+bootRun {
+    systemProperty 'logging.level.org.springframework', 'INFO'
+    systemProperty 'org.gradle.console', 'plain'
+}
+
 repositories {
 	mavenCentral()
 }
@@ -22,6 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
