@@ -27,6 +27,11 @@ public class MemberRepository {
     return Optional.ofNullable(mongoTemplate.findOne(query, Member.class));
   }
 
+  public Optional<Member> findBySchoolEmail(String schoolEmail) {
+    Query query = new Query(Criteria.where("schoolEmail").is(schoolEmail));
+    return Optional.ofNullable(mongoTemplate.findOne(query, Member.class));
+  }
+
   public void deleteByPersonalEmail(String personalEmail) {
     Query query = new Query(Criteria.where("personalEmail").is(personalEmail));
     mongoTemplate.remove(query, Member.class);
