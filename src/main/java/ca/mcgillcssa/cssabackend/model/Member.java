@@ -2,6 +2,7 @@ package ca.mcgillcssa.cssabackend.model;
 
 import java.time.LocalDate;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class Member {
   private String name;
   private String pseudo;
   private String personalEmail;
+  @Id
   private String schoolEmail;
   private String wechatId;
   private String caPhoneNum;

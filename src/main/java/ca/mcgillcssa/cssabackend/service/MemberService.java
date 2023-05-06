@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import ca.mcgillcssa.cssabackend.model.Member;
 import ca.mcgillcssa.cssabackend.repository.MemberRepository;
+import ca.mcgillcssa.cssabackend.util.EmailAddressChecker;
 
 @Service
 public class MemberService {
@@ -29,11 +30,21 @@ public class MemberService {
     }
 
     if (findByPersonalEmail(personalEmail).isPresent()) {
-      throw new IllegalArgumentException("A member with the personal email " + personalEmail + " already exists.");
+      throw new IllegalArgumentException("A member with the personal email " +
+          personalEmail + " already exists.");
     }
 
     if (findBySchoolEmail(personalEmail).isPresent()) {
-      throw new IllegalArgumentException("A member with the school email " + personalEmail + " already exists.");
+      throw new IllegalArgumentException("A member with the school email " +
+          personalEmail + " already exists.");
+    }
+
+    if (!EmailAddressChecker.isValidPersonalEmail(personalEmail)) {
+      throw new IllegalArgumentException(personalEmail + "is not a valid personal email");
+    }
+
+    if (!EmailAddressChecker.isValidSchoolEmail(schoolEmail)) {
+      throw new IllegalArgumentException(schoolEmail + "is not a valid McGill email");
     }
 
     LocalDate birthDay;
