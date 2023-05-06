@@ -20,10 +20,10 @@ public class MemberService {
   }
 
   public Member createMember(String name, String pseudo, String personalEmail, String schoolEmail, String wechatId,
-      String caPhoneNum, String cnPhoneNum, String birthDayStr,
+      String caPhoneNum, String cnPhoneNum, String birthdayStr,
       String departmentStr, String positionStr, String clothSizeStr) throws IllegalArgumentException {
 
-    if (name == null || personalEmail == null || schoolEmail == null || birthDayStr == null || departmentStr == null
+    if (name == null || personalEmail == null || schoolEmail == null || birthdayStr == null || departmentStr == null
         || positionStr == null) {
       throw new IllegalArgumentException(
           "Missing information: name, personal email, mcgill email, birthday, department and position are required.");
@@ -47,10 +47,10 @@ public class MemberService {
       throw new IllegalArgumentException(schoolEmail + "is not a valid McGill email");
     }
 
-    LocalDate birthDay;
+    LocalDate birthday;
     try {
-      birthDayStr = "2000-" + birthDayStr;
-      birthDay = LocalDate.parse(birthDayStr);
+      birthdayStr = "2000-" + birthdayStr;
+      birthday = LocalDate.parse(birthdayStr);
     } catch (DateTimeParseException e) {
       throw new IllegalArgumentException("Please provide a valid birthday in the format of MM-dd.");
     }
@@ -76,7 +76,7 @@ public class MemberService {
       throw new IllegalArgumentException(clothSizeStr + " is not a valid clothing size.");
     }
 
-    Member newMember = new Member(name, pseudo, personalEmail, schoolEmail, wechatId, caPhoneNum, cnPhoneNum, birthDay,
+    Member newMember = new Member(name, pseudo, personalEmail, schoolEmail, wechatId, caPhoneNum, cnPhoneNum, birthday,
         department, position, clothSize);
 
     return memberRepository.createMember(newMember);

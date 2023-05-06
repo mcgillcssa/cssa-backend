@@ -37,7 +37,7 @@ public class MemberController {
     try {
       Member newMember = memberService.createMember(requestBody.getName(), requestBody.getPseudo(),
           requestBody.getPersonalEmail(), requestBody.getSchoolEmail(), requestBody.getWechatId(),
-          requestBody.getCaPhoneNum(), requestBody.getCnPhoneNum(), requestBody.getBirthDay(),
+          requestBody.getCaPhoneNum(), requestBody.getCnPhoneNum(), requestBody.getBirthday(),
           requestBody.getDepartment(), requestBody.getPosition(), requestBody.getClothSize());
 
       response.put("message", "Member created");
@@ -108,7 +108,7 @@ public class MemberController {
     private String wechatId = "";
     private String caPhoneNum = "";
     private String cnPhoneNum = "";
-    private String birthDay;
+    private String birthday;
     private String department;
     private String position;
     private String clothSize = "M";

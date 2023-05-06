@@ -22,7 +22,7 @@ public class Member {
   private String wechatId;
   private String caPhoneNum;
   private String cnPhoneNum;
-  private LocalDate birthDay;
+  private LocalDate birthday;
   private Department department;
   private Position position;
   private ClothSize clothSize;

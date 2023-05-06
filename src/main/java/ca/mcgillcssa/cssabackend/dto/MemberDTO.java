@@ -16,7 +16,7 @@ public class MemberDTO {
   private String wechatId;
   private String caPhoneNum;
   private String cnPhoneNum;
-  private String birthDay; // represented as String in MM-dd format
+  private String birthday; // represented as String in MM-dd format
   private String department;
   private String position;
   private String clothSize;
@@ -29,7 +29,7 @@ public class MemberDTO {
     this.wechatId = member.getWechatId();
     this.caPhoneNum = member.getCaPhoneNum();
     this.cnPhoneNum = member.getCnPhoneNum();
-    this.birthDay = member.getBirthDay().format(DateTimeFormatter.ofPattern("MM-dd"));
+    this.birthday = member.getBirthday().format(DateTimeFormatter.ofPattern("MM-dd"));
     this.department = member.getDepartment().toString();
     this.position = member.getPosition().toString();
     this.clothSize = member.getClothSize().toString();
