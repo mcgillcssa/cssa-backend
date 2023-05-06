@@ -86,7 +86,7 @@ public class MemberController {
     }
   }
 
-  @DeleteMapping("/{personalEmail}")
+  @DeleteMapping("/personal/{personalEmail}")
   public ResponseEntity<?> deleteMemberByPersonalEmail(@PathVariable String personalEmail) {
     Map<String, Object> response = new HashMap<>();
     boolean deleted = memberService.deleteByPersonalEmail(personalEmail);
@@ -95,6 +95,18 @@ public class MemberController {
       return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     response.put("message", "Member with personal email " + personalEmail + " not found");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
+
+  @DeleteMapping("/school/{schoolEmail}")
+  public ResponseEntity<?> deleteMemberBySchoolEmail(@PathVariable String schoolEmail) {
+    Map<String, Object> response = new HashMap<>();
+    boolean deleted = memberService.deleteBySchoolEmail(schoolEmail);
+    if (deleted) {
+      response.put("message", "Member with school email " + schoolEmail + " successfully deleted");
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    response.put("message", "Member with school email " + schoolEmail + " not found");
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 

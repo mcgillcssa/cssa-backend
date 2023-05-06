@@ -39,4 +39,10 @@ public class MemberRepository {
     DeleteResult result = mongoTemplate.remove(query, Member.class);
     return result.wasAcknowledged() && result.getDeletedCount() > 0;
   }
+
+  public boolean deleteBySchoolEmail(String schoolEmail) {
+    Query query = new Query(Criteria.where("schoolEmail").is(schoolEmail));
+    DeleteResult result = mongoTemplate.remove(query, Member.class);
+    return result.wasAcknowledged() && result.getDeletedCount() > 0;
+  }
 }
