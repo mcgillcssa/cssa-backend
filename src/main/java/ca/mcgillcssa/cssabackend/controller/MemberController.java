@@ -1,6 +1,9 @@
 package ca.mcgillcssa.cssabackend.controller;
 
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -84,6 +87,24 @@ public class MemberController {
       response.put("message", "Member not found with mcgill email " + schoolEmail);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+  }
+
+  @GetMapping("/birthdayMonth/{birthdayMonth}")
+  public ResponseEntity<?> getMembersByBirthMonth(@PathVariable int birthdayMonth) {
+    Map<String, Object> response = new HashMap<>();
+
+    List<Member> members = memberService.findByBirthdayMonth(birthdayMonth);
+    if (members.size() > 0) {
+      List<MemberDTO> memberDTOs = new ArrayList<MemberDTO>();
+      for (Member member : members) {
+        memberDTOs.add(new MemberDTO(member));
+      }
+      response.put("message", "Members found with birthday in " + Month.of(birthdayMonth).name());
+      response.put("member", memberDTOs);
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    response.put("message", "No member found with birthday in " + Month.of(birthdayMonth).name());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 
   @DeleteMapping("/personal/{personalEmail}")
