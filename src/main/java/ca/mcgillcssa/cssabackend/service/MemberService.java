@@ -2,6 +2,7 @@ package ca.mcgillcssa.cssabackend.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -88,6 +89,10 @@ public class MemberService {
 
   public Optional<Member> findBySchoolEmail(String personalEmail) {
     return memberRepository.findBySchoolEmail(personalEmail);
+  }
+
+  public List<Member> findByBirthdayMonth(int birthMonth) {
+    return memberRepository.findByBirthdayMonth(birthMonth);
   }
 
   public boolean deleteByPersonalEmail(String personalEmail) {
