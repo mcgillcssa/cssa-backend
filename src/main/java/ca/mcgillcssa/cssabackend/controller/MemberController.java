@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgillcssa.cssabackend.dto.MemberDTO;
 import ca.mcgillcssa.cssabackend.model.Member;
 import ca.mcgillcssa.cssabackend.service.MemberService;
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
-import lombok.Builder.Default;
 
 @RestController
 @RequestMapping("/members")
@@ -35,7 +33,6 @@ public class MemberController {
 
   @PostMapping("/")
   public ResponseEntity<?> createMember(@RequestBody MemberRequestBody requestBody) {
-    System.out.println(requestBody.getWechatId());
     Map<String, Object> response = new HashMap<>();
     try {
       Member newMember = memberService.createMember(requestBody.getName(), requestBody.getPseudo(),
