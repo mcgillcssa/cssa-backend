@@ -14,8 +14,8 @@ import com.mongodb.client.MongoClients;
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
-  private String uri = "mongodb+srv://cssa:" + System.getenv("DB_PASSWORD")
-      + "@sandbox.z5ouobf.mongodb.net/?retryWrites=true&w=majority";
+  private String uri = "mongodb+srv://itmcgillcssa:" + System.getenv("DB_PASSWORD")
+      + "@cssa-backend.dex7vrz.mongodb.net/?retryWrites=true&w=majority";
 
   @Override
   protected String getDatabaseName() {
