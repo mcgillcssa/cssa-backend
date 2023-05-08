@@ -18,8 +18,8 @@ public class Sponsor {
     @Id
     private String sponsorName;
     private CoopDuration coopDuration;
-    private String imageUrl;
-    private String websiteUrl;
+    private String sponsorImageUrl;
+    private String sponsorWebsiteUrl;
     private SponsorClass sponsorClass;
 
     public enum CoopDuration {
