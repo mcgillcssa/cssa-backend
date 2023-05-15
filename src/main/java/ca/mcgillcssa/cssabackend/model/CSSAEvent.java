@@ -11,7 +11,7 @@ import lombok.ToString;
 @Data
 @ToString
 
-public class Event {
+public class CSSAEvent {
   @Id
   private String id;
   private String eventName;
@@ -22,7 +22,7 @@ public class Event {
   private String eventDescription;
   private String eventLinkUrl;
 
-  public Event(String eventName, LocalDate eventStartDate, LocalDate eventEndDate, String eventLocation,
+  public CSSAEvent(String eventName, LocalDate eventStartDate, LocalDate eventEndDate, String eventLocation,
       String eventImageUrl, String eventDescription, String eventLinkUrl) {
     this.eventName = eventName;
     this.eventStartDate = eventStartDate;
