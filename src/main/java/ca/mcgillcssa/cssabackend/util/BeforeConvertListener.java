@@ -1,6 +1,7 @@
 package ca.mcgillcssa.cssabackend.util;
 
-import org.springframework.boot.context.properties.PropertyMapper.Source;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 
@@ -10,9 +11,9 @@ public class BeforeConvertListener extends AbstractMongoEventListener<Event> {
   @Override
   public void onBeforeConvert(BeforeConvertEvent<Event> event) {
     Event source = event.getSource();
-    var eventName = source.getEventName();
-    var eventStartDate = source.getEventStartDate();
-    var id = eventName.concat(eventStartDate.toString());
-    source.setId(Integer.parseInt(id));
+    String eventName = source.getEventName();
+    String eventStartDateString = source.getEventStartDate().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+    String id = eventName.concat(eventStartDateString);
+    source.setId(id);
   }
 }
