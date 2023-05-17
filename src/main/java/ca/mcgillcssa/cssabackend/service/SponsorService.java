@@ -1,0 +1,104 @@
+package ca.mcgillcssa.cssabackend.service;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import ca.mcgillcssa.cssabackend.model.Sponsor;
+import ca.mcgillcssa.cssabackend.model.Sponsor.CoopDuration;
+import ca.mcgillcssa.cssabackend.model.Sponsor.SponsorClass;
+import ca.mcgillcssa.cssabackend.repository.SponsorRepository;
+
+import ca.mcgillcssa.cssabackend.util.UrlChecker;
+
+@Service
+public class SponsorService {
+
+    private final SponsorRepository sponsorRepository;
+
+    public SponsorService(SponsorRepository sponsorRepository) {
+        this.sponsorRepository = sponsorRepository;
+    }
+
+    // Create single
+    public Sponsor createSponsor(String sponsorName, String coopDuration, String sponsorImageUrl,
+            String sponsorWebsiteUrl, String sponsorClass) throws IllegalArgumentException, IOException {
+        // Null check
+        if (sponsorName == null || sponsorName.isEmpty()) {
+            throw new IllegalArgumentException("Sponsor name cannot be null or empty");
+        }
+
+        if (coopDuration == null || coopDuration.isEmpty()) {
+            throw new IllegalArgumentException("Coop duration cannot be null or empty");
+        }
+
+        if (sponsorImageUrl == null || sponsorImageUrl.isEmpty()) {
+            throw new IllegalArgumentException("Sponsor image url cannot be null or empty");
+        }
+
+        if (sponsorWebsiteUrl == null || sponsorWebsiteUrl.isEmpty()) {
+            throw new IllegalArgumentException("Sponsor website url cannot be null or empty");
+        }
+
+        if (sponsorClass == null || sponsorClass.isEmpty()) {
+            throw new IllegalArgumentException("Sponsor class cannot be null or empty");
+        }
+
+        // duplicate check
+        if (sponsorRepository.findSponsorByName(sponsorName).isPresent()) {
+            throw new IllegalArgumentException("Sponsor name already exists");
+        }
+
+        // url avilability check
+        if (!UrlChecker.isValidUrl(sponsorImageUrl)) {
+            throw new IllegalArgumentException("Sponsor image url is not valid");
+        }
+
+        if (!UrlChecker.isValidUrl(sponsorWebsiteUrl)) {
+            throw new IllegalArgumentException("Sponsor website url is not valid");
+        }
+
+        CoopDuration coopDurationEnum;
+        try {
+            coopDurationEnum = CoopDuration.valueOf(coopDuration);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Coop duration is not valid");
+        }
+
+        SponsorClass sponsorClassEnum;
+        try {
+            sponsorClassEnum = SponsorClass.valueOf(sponsorClass);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Sponsor class is not valid");
+        }
+
+        Sponsor sponsor = new Sponsor(sponsorName, coopDurationEnum, sponsorImageUrl, sponsorWebsiteUrl,
+                sponsorClassEnum);
+        return sponsorRepository.createSponsor(sponsor);
+    }
+
+    // Find single
+    public Optional<Sponsor> findSponsorByName(String sponsorName) {
+        return sponsorRepository.findSponsorByName(sponsorName);
+    }
+
+    // Find many
+    public List<Sponsor> findAllSponsors() {
+        return sponsorRepository.findAllSponsors();
+    }
+
+    public List<Sponsor> findSponsorsByClass(String sponsorClass) {
+        return sponsorRepository.findSponsorsByClass(sponsorClass);
+    }
+
+    public List<Sponsor> findSponsorsByCoopDuration(String coopDuration) {
+        return sponsorRepository.findSponsorsByCoopDuration(coopDuration);
+    }
+
+    // Delete single
+    public boolean deleteSponsorByName(String sponsorName) {
+        return sponsorRepository.deleteSponsorByName(sponsorName);
+    }
+}

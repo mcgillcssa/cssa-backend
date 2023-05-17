@@ -1,0 +1,145 @@
+package ca.mcgillcssa.cssabackend.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import ca.mcgillcssa.cssabackend.dto.SponsorDTO;
+import ca.mcgillcssa.cssabackend.model.Sponsor;
+import ca.mcgillcssa.cssabackend.service.SponsorService;
+import lombok.Data;
+import lombok.ToString;
+
+@RestController
+@RequestMapping("/sponsors")
+public class SponsorController {
+
+    @Data
+    @ToString
+    public static class SponsorRequestBody {
+        private String sponsorName;
+        private String coopDuration;
+        private String sponsorImageUrl;
+        private String sponsorWebsiteUrl;
+        private String sponsorClass;
+    }
+
+    private final SponsorService sponsorService;
+
+    public SponsorController(SponsorService memberService) {
+        this.sponsorService = memberService;
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<?> createSponsor(@RequestBody SponsorRequestBody requestBody) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Sponsor newSponsor = sponsorService.createSponsor(requestBody.getSponsorName(),
+                    requestBody.getCoopDuration(),
+                    requestBody.getSponsorImageUrl(), requestBody.getSponsorWebsiteUrl(),
+                    requestBody.getSponsorClass());
+            response.put("message", "Sponsor created");
+            response.put("sponsor", new SponsorDTO(newSponsor));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            response.put("message", "Failed to create sponsor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (DataAccessException e) {
+            response.put("message", "Failed to create sponsor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        } catch (IOException e) {
+            response.put("message", "Failed to create sponsor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getAllSponsors() {
+        List<Sponsor> sponsors = new ArrayList<>();
+        try {
+            sponsors = sponsorService.findAllSponsors();
+            return ResponseEntity.status(HttpStatus.OK).body(sponsors);
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/name/{sponsorName}")
+    public ResponseEntity<?> getSponsorByName(@PathVariable String sponsorName) {
+        Map<String, Object> response = new HashMap<>();
+        Optional<Sponsor> sponsor = sponsorService.findSponsorByName(sponsorName);
+        if (sponsor.isPresent()) {
+            response.put("message", "Sponsor found with name: " + sponsorName);
+            response.put("sponsor", new SponsorDTO(sponsor.get()));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            response.put("message", "Sponsor not found with name: " + sponsorName);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    @GetMapping("/duration/{coopDuration}")
+    public ResponseEntity<?> getSponsorByCoopDuration(@PathVariable String coopDuration) {
+        Map<String, Object> response = new HashMap<>();
+        List<Sponsor> sponsor = sponsorService.findSponsorsByCoopDuration(coopDuration);
+        if (sponsor.size() > 0) {
+            List<SponsorDTO> sponsorDTO = new ArrayList<>();
+            for (Sponsor s : sponsor) {
+                sponsorDTO.add(new SponsorDTO(s));
+            }
+            response.put("message", "Sponsors found with coop duration: " + coopDuration);
+            response.put("sponsors", sponsorDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            response.put("message", "Sponsors not found with coop duration: " + coopDuration);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    @GetMapping("/class/{sponsorClass}")
+    public ResponseEntity<?> getSponsorByClass(@PathVariable String sponsorClass) {
+        Map<String, Object> response = new HashMap<>();
+        List<Sponsor> sponsor = sponsorService.findSponsorsByClass(sponsorClass);
+        if (sponsor.size() > 0) {
+            List<SponsorDTO> sponsorDTO = new ArrayList<>();
+            for (Sponsor s : sponsor) {
+                sponsorDTO.add(new SponsorDTO(s));
+            }
+            response.put("message", "Sponsors found with sponsor class: " + sponsorClass);
+            response.put("sponsors", sponsorDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            response.put("message", "Sponsors not found with sponsor class: " + sponsorClass);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    @DeleteMapping("/name/{sponsorName}")
+    public ResponseEntity<?> deleteSponsorByName(@PathVariable String sponsorName) {
+        Map<String, Object> response = new HashMap<>();
+        boolean deleted = sponsorService.deleteSponsorByName(sponsorName);
+        if (deleted) {
+            response.put("message", "Sponsor deleted with name: " + sponsorName);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            response.put("message", "Sponsor not found with name: " + sponsorName);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+}
