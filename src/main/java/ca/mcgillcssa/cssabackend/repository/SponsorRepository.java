@@ -6,9 +6,11 @@ import java.util.Optional;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 
 import ca.mcgillcssa.cssabackend.model.Sponsor;
 
@@ -50,6 +52,31 @@ public class SponsorRepository {
         Query query = new Query(Criteria.where("sponsorName").is(sponsorName));
         DeleteResult deleteResult = mongoTemplate.remove(query, Sponsor.class);
         return deleteResult.wasAcknowledged() && deleteResult.getDeletedCount() > 0;
+    }
+
+    // Update single
+    public boolean updateSponsor(String name, String coopDuration, String sponsorImageUrl, String sponsorWebsiteUrl, String sponsorClass) {
+        Query query = new Query(Criteria.where("sponsorName").is(name));
+        Update update = new Update();
+
+        if (coopDuration != null && !coopDuration.isEmpty()) {
+            update.set("coopDuration", coopDuration);
+        }
+
+        if (sponsorImageUrl != null && !sponsorImageUrl.isEmpty()) {
+            update.set("sponsorImageUrl", sponsorImageUrl);
+        }
+
+        if (sponsorWebsiteUrl != null && !sponsorWebsiteUrl.isEmpty()) {
+            update.set("sponsorWebsiteUrl", sponsorWebsiteUrl);
+        }
+
+        if (sponsorClass != null && !sponsorClass.isEmpty()) {
+            update.set("sponsorClass", sponsorClass);
+        }
+
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, Sponsor.class);
+        return updateResult.wasAcknowledged() && updateResult.getModifiedCount() > 0;
     }
 
 }

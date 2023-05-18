@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgillcssa.cssabackend.dto.SponsorDTO;
 import ca.mcgillcssa.cssabackend.model.Sponsor;
@@ -60,13 +60,10 @@ public class SponsorController {
         } catch (IllegalArgumentException e) {
             response.put("message", "Failed to create sponsor: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | IOException e) {
             response.put("message", "Failed to create sponsor: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        } catch (IOException e) {
-            response.put("message", "Failed to create sponsor: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+        } 
     }
 
     @GetMapping("/")
@@ -98,7 +95,7 @@ public class SponsorController {
     public ResponseEntity<?> getSponsorByCoopDuration(@PathVariable String coopDuration) {
         Map<String, Object> response = new HashMap<>();
         List<Sponsor> sponsor = sponsorService.findSponsorsByCoopDuration(coopDuration);
-        if (sponsor.size() > 0) {
+        if (!sponsor.isEmpty()) {
             List<SponsorDTO> sponsorDTO = new ArrayList<>();
             for (Sponsor s : sponsor) {
                 sponsorDTO.add(new SponsorDTO(s));
@@ -116,7 +113,7 @@ public class SponsorController {
     public ResponseEntity<?> getSponsorByClass(@PathVariable String sponsorClass) {
         Map<String, Object> response = new HashMap<>();
         List<Sponsor> sponsor = sponsorService.findSponsorsByClass(sponsorClass);
-        if (sponsor.size() > 0) {
+        if (!sponsor.isEmpty()) {
             List<SponsorDTO> sponsorDTO = new ArrayList<>();
             for (Sponsor s : sponsor) {
                 sponsorDTO.add(new SponsorDTO(s));
@@ -140,6 +137,23 @@ public class SponsorController {
         } else {
             response.put("message", "Sponsor not found with name: " + sponsorName);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    @PutMapping("/name/{sponsorName}")
+    public ResponseEntity<?> updateSponsorByName(@PathVariable String sponsorName, @RequestBody SponsorRequestBody requestBody) throws IOException {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            sponsorService.updateSponsor(sponsorName, 
+                    requestBody.getCoopDuration(),
+                    requestBody.getSponsorImageUrl(), requestBody.getSponsorWebsiteUrl(),
+                    requestBody.getSponsorClass());
+            response.put("message", "Sponsor updated with name: " + sponsorName);
+            response.put("sponsor", new SponsorDTO(sponsorService.findSponsorByName(sponsorName).get()));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }catch (IllegalArgumentException e) {
+            response.put("message", "Failed to create sponsor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 }

@@ -101,4 +101,42 @@ public class SponsorService {
     public boolean deleteSponsorByName(String sponsorName) {
         return sponsorRepository.deleteSponsorByName(sponsorName);
     }
+
+    // Update single
+    public boolean updateSponsor(String sponsorName, String coopDuration, String sponsorImageUrl,
+            String sponsorWebsiteUrl, String sponsorClass) throws IOException {
+        // object availavility check
+        if (!sponsorRepository.findSponsorByName(sponsorName).isPresent()) {
+            throw new IllegalArgumentException("Sponsor does not exist");
+        }
+
+        // If all fields are null, throw exception
+        if ((coopDuration == null || coopDuration.isEmpty()) && (sponsorImageUrl == null || sponsorImageUrl.isEmpty())
+                && (sponsorWebsiteUrl == null || sponsorWebsiteUrl.isEmpty())
+                && (sponsorClass == null || sponsorClass.isEmpty())) {
+            throw new IllegalArgumentException("Nothing to be changed");
+        }
+
+        // parameter check
+        if (coopDuration != null && !coopDuration.isEmpty() && !coopDuration.equals("季度合作")
+                && !coopDuration.equals("全年合作")) {
+            throw new IllegalArgumentException("Coop duration is not valid");
+        }
+
+        if (sponsorClass != null && !sponsorClass.isEmpty() && (!sponsorClass.equals("PLATINUM")
+                && !sponsorClass.equals("GOLD") && !sponsorClass.equals("SILVER"))) {
+            throw new IllegalArgumentException("Sponsor class is not valid");
+        }
+
+        if (sponsorImageUrl != null && !sponsorImageUrl.isEmpty() && !UrlChecker.isValidUrl(sponsorImageUrl)) {
+            throw new IllegalArgumentException("Sponsor image url is not valid");
+        }
+
+        if (sponsorWebsiteUrl != null && !sponsorWebsiteUrl.isEmpty() && !UrlChecker.isValidUrl(sponsorWebsiteUrl)) {
+            throw new IllegalArgumentException("Sponsor website url is not valid");
+        }
+
+        return sponsorRepository.updateSponsor(sponsorName, coopDuration, sponsorImageUrl, sponsorWebsiteUrl,
+                sponsorClass);
+    }
 }
