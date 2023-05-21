@@ -63,7 +63,7 @@ public class SponsorController {
         } catch (DataAccessException | IOException e) {
             response.put("message", "Failed to create sponsor: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        } 
+        }
     }
 
     @GetMapping("/")
@@ -141,18 +141,19 @@ public class SponsorController {
     }
 
     @PutMapping("/name/{sponsorName}")
-    public ResponseEntity<?> updateSponsorByName(@PathVariable String sponsorName, @RequestBody SponsorRequestBody requestBody) throws IOException {
+    public ResponseEntity<?> updateSponsorByName(@PathVariable String sponsorName,
+            @RequestBody SponsorRequestBody requestBody) throws IOException {
         Map<String, Object> response = new HashMap<>();
         try {
-            sponsorService.updateSponsor(sponsorName, 
+            sponsorService.updateSponsor(sponsorName,
                     requestBody.getCoopDuration(),
                     requestBody.getSponsorImageUrl(), requestBody.getSponsorWebsiteUrl(),
                     requestBody.getSponsorClass());
             response.put("message", "Sponsor updated with name: " + sponsorName);
             response.put("sponsor", new SponsorDTO(sponsorService.findSponsorByName(sponsorName).get()));
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        }catch (IllegalArgumentException e) {
-            response.put("message", "Failed to create sponsor: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            response.put("message", "Failed to update sponsor with name: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

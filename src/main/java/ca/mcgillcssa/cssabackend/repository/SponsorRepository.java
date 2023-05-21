@@ -55,7 +55,8 @@ public class SponsorRepository {
     }
 
     // Update single
-    public boolean updateSponsor(String name, String coopDuration, String sponsorImageUrl, String sponsorWebsiteUrl, String sponsorClass) {
+    public boolean updateSponsor(String name, String coopDuration, String sponsorImageUrl, String sponsorWebsiteUrl,
+            String sponsorClass) {
         Query query = new Query(Criteria.where("sponsorName").is(name));
         Update update = new Update();
 

@@ -52,12 +52,23 @@ public class SponsorService {
         }
 
         // url avilability check
-        if (!UrlChecker.isValidUrl(sponsorImageUrl)) {
-            throw new IllegalArgumentException("Sponsor image url is not valid");
+        try {
+            UrlChecker urlChecker = UrlChecker.isValidUrl(sponsorImageUrl);
+            if (!urlChecker.isValid()) {
+                throw new IllegalArgumentException("Sponsor image url connection failed");
+            }
+            sponsorImageUrl = urlChecker.getUrl();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Sponsor image url format error");
         }
-
-        if (!UrlChecker.isValidUrl(sponsorWebsiteUrl)) {
-            throw new IllegalArgumentException("Sponsor website url is not valid");
+        try {
+            UrlChecker urlChecker = UrlChecker.isValidUrl(sponsorWebsiteUrl);
+            if (!urlChecker.isValid()) {
+                throw new IllegalArgumentException("Sponsor website url connection failed");
+            }
+            sponsorWebsiteUrl = urlChecker.getUrl();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Sponsor website url format error");
         }
 
         CoopDuration coopDurationEnum;
@@ -128,12 +139,28 @@ public class SponsorService {
             throw new IllegalArgumentException("Sponsor class is not valid");
         }
 
-        if (sponsorImageUrl != null && !sponsorImageUrl.isEmpty() && !UrlChecker.isValidUrl(sponsorImageUrl)) {
-            throw new IllegalArgumentException("Sponsor image url is not valid");
+        try {
+            if (sponsorImageUrl != null && !sponsorImageUrl.isEmpty()) {
+                UrlChecker urlChecker = UrlChecker.isValidUrl(sponsorImageUrl);
+                if (!urlChecker.isValid()) {
+                    throw new IllegalArgumentException("Sponsor image url connection failed");
+                }
+                sponsorImageUrl = urlChecker.getUrl();
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Sponsor image url format error");
         }
 
-        if (sponsorWebsiteUrl != null && !sponsorWebsiteUrl.isEmpty() && !UrlChecker.isValidUrl(sponsorWebsiteUrl)) {
-            throw new IllegalArgumentException("Sponsor website url is not valid");
+        try {
+            if (sponsorWebsiteUrl != null && !sponsorWebsiteUrl.isEmpty()) {
+                UrlChecker urlChecker = UrlChecker.isValidUrl(sponsorWebsiteUrl);
+                if (!urlChecker.isValid()) {
+                    throw new IllegalArgumentException("Sponsor website url connection failed");
+                }
+                sponsorWebsiteUrl = urlChecker.getUrl();
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Sponsor website url format error");
         }
 
         return sponsorRepository.updateSponsor(sponsorName, coopDuration, sponsorImageUrl, sponsorWebsiteUrl,
