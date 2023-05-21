@@ -21,8 +21,8 @@ public class Sponsor {
   private SponsorClass sponsorClass;
 
   public enum CoopDuration {
-    季度合作,
-    全年合作;
+    QUARTER_YEAR,
+    FULL_YEAR;
 
     @Override
     public String toString() {

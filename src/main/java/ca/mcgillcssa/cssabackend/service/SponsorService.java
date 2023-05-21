@@ -118,8 +118,8 @@ public class SponsorService {
         }
 
         // parameter check
-        if (coopDuration != null && !coopDuration.isEmpty() && !coopDuration.equals("季度合作")
-                && !coopDuration.equals("全年合作")) {
+        if (coopDuration != null && !coopDuration.isEmpty() && !coopDuration.equals("QUARTER_YEAR")
+                && !coopDuration.equals("FULL_YEAR")) {
             throw new IllegalArgumentException("Coop duration is not valid");
         }
 
