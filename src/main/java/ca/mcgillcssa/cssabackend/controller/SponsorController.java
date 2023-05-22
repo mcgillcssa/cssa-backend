@@ -94,36 +94,46 @@ public class SponsorController {
     @GetMapping("/duration/{coopDuration}")
     public ResponseEntity<?> getSponsorByCoopDuration(@PathVariable String coopDuration) {
         Map<String, Object> response = new HashMap<>();
-        List<Sponsor> sponsor = sponsorService.findSponsorsByCoopDuration(coopDuration);
-        if (!sponsor.isEmpty()) {
-            List<SponsorDTO> sponsorDTO = new ArrayList<>();
-            for (Sponsor s : sponsor) {
-                sponsorDTO.add(new SponsorDTO(s));
+        try {
+            List<Sponsor> sponsor = sponsorService.findSponsorsByCoopDuration(coopDuration);
+            if (!sponsor.isEmpty()) {
+                List<SponsorDTO> sponsorDTO = new ArrayList<>();
+                for (Sponsor s : sponsor) {
+                    sponsorDTO.add(new SponsorDTO(s));
+                }
+                response.put("message", "Sponsors found with coop duration: " + coopDuration);
+                response.put("sponsors", sponsorDTO);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                response.put("message", "Sponsors not found with coop duration: " + coopDuration);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            response.put("message", "Sponsors found with coop duration: " + coopDuration);
-            response.put("sponsors", sponsorDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            response.put("message", "Sponsors not found with coop duration: " + coopDuration);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (IllegalArgumentException e) {
+            response.put("message", "Failed to find sponsor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @GetMapping("/class/{sponsorClass}")
     public ResponseEntity<?> getSponsorByClass(@PathVariable String sponsorClass) {
         Map<String, Object> response = new HashMap<>();
-        List<Sponsor> sponsor = sponsorService.findSponsorsByClass(sponsorClass);
-        if (!sponsor.isEmpty()) {
-            List<SponsorDTO> sponsorDTO = new ArrayList<>();
-            for (Sponsor s : sponsor) {
-                sponsorDTO.add(new SponsorDTO(s));
+        try {
+            List<Sponsor> sponsor = sponsorService.findSponsorsByClass(sponsorClass);
+            if (!sponsor.isEmpty()) {
+                List<SponsorDTO> sponsorDTO = new ArrayList<>();
+                for (Sponsor s : sponsor) {
+                    sponsorDTO.add(new SponsorDTO(s));
+                }
+                response.put("message", "Sponsors found with sponsor class: " + sponsorClass);
+                response.put("sponsors", sponsorDTO);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                response.put("message", "Sponsors not found with sponsor class: " + sponsorClass);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            response.put("message", "Sponsors found with sponsor class: " + sponsorClass);
-            response.put("sponsors", sponsorDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } else {
-            response.put("message", "Sponsors not found with sponsor class: " + sponsorClass);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (IllegalArgumentException e) {
+            response.put("message", "Failed to find sponsor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 

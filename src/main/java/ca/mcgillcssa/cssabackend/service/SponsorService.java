@@ -101,10 +101,16 @@ public class SponsorService {
     }
 
     public List<Sponsor> findSponsorsByClass(String sponsorClass) {
+        if (!sponsorClass.equals("PLATINUM") && !sponsorClass.equals("GOLD") && !sponsorClass.equals("SILVER")) {
+            throw new IllegalArgumentException("Sponsor class is not valid");
+        }
         return sponsorRepository.findSponsorsByClass(sponsorClass);
     }
 
     public List<Sponsor> findSponsorsByCoopDuration(String coopDuration) {
+        if (!coopDuration.equals("QUARTER_YEAR") && !coopDuration.equals("FULL_YEAR")) {
+            throw new IllegalArgumentException("Coop duration is not valid");
+        }
         return sponsorRepository.findSponsorsByCoopDuration(coopDuration);
     }
 
