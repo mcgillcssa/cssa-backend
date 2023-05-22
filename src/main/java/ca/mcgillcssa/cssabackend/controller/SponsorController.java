@@ -41,6 +41,8 @@ public class SponsorController {
     }
 
     private final SponsorService sponsorService;
+    private static final String msgStr = "message";
+    private static final String sponsorStr = "sponsor";
 
     public SponsorController(SponsorService memberService) {
         this.sponsorService = memberService;
@@ -54,14 +56,14 @@ public class SponsorController {
                     requestBody.getCoopDuration(),
                     requestBody.getSponsorImageUrl(), requestBody.getSponsorWebsiteUrl(),
                     requestBody.getSponsorClass());
-            response.put("message", "Sponsor created");
-            response.put("sponsor", new SponsorDTO(newSponsor));
+            response.put(msgStr, "Sponsor created");
+            response.put(sponsorStr, new SponsorDTO(newSponsor));
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
-            response.put("message", "Failed to create sponsor: " + e.getMessage());
+            response.put(msgStr, "Failed to create sponsor: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (DataAccessException | IOException e) {
-            response.put("message", "Failed to create sponsor: " + e.getMessage());
+            response.put(msgStr, "Failed to create sponsor: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
@@ -82,11 +84,11 @@ public class SponsorController {
         Map<String, Object> response = new HashMap<>();
         Optional<Sponsor> sponsor = sponsorService.findSponsorByName(sponsorName);
         if (sponsor.isPresent()) {
-            response.put("message", "Sponsor found with name: " + sponsorName);
-            response.put("sponsor", new SponsorDTO(sponsor.get()));
+            response.put(msgStr, "Sponsor found with name: " + sponsorName);
+            response.put(sponsorStr, new SponsorDTO(sponsor.get()));
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
-            response.put("message", "Sponsor not found with name: " + sponsorName);
+            response.put(msgStr, "Sponsor not found with name: " + sponsorName);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -101,15 +103,15 @@ public class SponsorController {
                 for (Sponsor s : sponsor) {
                     sponsorDTO.add(new SponsorDTO(s));
                 }
-                response.put("message", "Sponsors found with coop duration: " + coopDuration);
+                response.put(msgStr, "Sponsors found with coop duration: " + coopDuration);
                 response.put("sponsors", sponsorDTO);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                response.put("message", "Sponsors not found with coop duration: " + coopDuration);
+                response.put(msgStr, "Sponsors not found with coop duration: " + coopDuration);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         } catch (IllegalArgumentException e) {
-            response.put("message", "Failed to find sponsor: " + e.getMessage());
+            response.put(msgStr, "Failed to find sponsor: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -124,15 +126,15 @@ public class SponsorController {
                 for (Sponsor s : sponsor) {
                     sponsorDTO.add(new SponsorDTO(s));
                 }
-                response.put("message", "Sponsors found with sponsor class: " + sponsorClass);
+                response.put(msgStr, "Sponsors found with sponsor class: " + sponsorClass);
                 response.put("sponsors", sponsorDTO);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                response.put("message", "Sponsors not found with sponsor class: " + sponsorClass);
+                response.put(msgStr, "Sponsors not found with sponsor class: " + sponsorClass);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         } catch (IllegalArgumentException e) {
-            response.put("message", "Failed to find sponsor: " + e.getMessage());
+            response.put(msgStr, "Failed to find sponsor: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
@@ -142,10 +144,10 @@ public class SponsorController {
         Map<String, Object> response = new HashMap<>();
         boolean deleted = sponsorService.deleteSponsorByName(sponsorName);
         if (deleted) {
-            response.put("message", "Sponsor deleted with name: " + sponsorName);
+            response.put(msgStr, "Sponsor deleted with name: " + sponsorName);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
-            response.put("message", "Sponsor not found with name: " + sponsorName);
+            response.put(msgStr, "Sponsor not found with name: " + sponsorName);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
@@ -159,11 +161,11 @@ public class SponsorController {
                     requestBody.getCoopDuration(),
                     requestBody.getSponsorImageUrl(), requestBody.getSponsorWebsiteUrl(),
                     requestBody.getSponsorClass());
-            response.put("message", "Sponsor updated with name: " + sponsorName);
-            response.put("sponsor", new SponsorDTO(sponsorService.findSponsorByName(sponsorName).get()));
+            response.put(msgStr, "Sponsor updated with name: " + sponsorName);
+            response.put(sponsorStr, new SponsorDTO(sponsorService.findSponsorByName(sponsorName).get()));
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (IllegalArgumentException e) {
-            response.put("message", "Failed to update sponsor with name: " + e.getMessage());
+            response.put(msgStr, "Failed to update sponsor with name: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
