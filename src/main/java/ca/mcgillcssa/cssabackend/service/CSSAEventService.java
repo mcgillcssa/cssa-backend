@@ -48,12 +48,20 @@ public class CSSAEventService {
     return cssaEventRepository.findEventById(id);
   }
 
+  public Optional<CSSAEvent> findEventByName(String name) {
+    return cssaEventRepository.findEventByName(name);
+  }
+
   public Optional<List<CSSAEvent>> findAllEvents() {
     return cssaEventRepository.findAllEvents();
   }
 
   public boolean deletEventById(String id) {
     return cssaEventRepository.deleteById(id);
+  }
+
+  public boolean deletEventByName(String name) {
+    return cssaEventRepository.deleteByName(name);
   }
 
   public boolean updateEvent(String id, String eventName, LocalDate eventStartDate, LocalDate eventEndDate,

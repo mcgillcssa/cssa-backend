@@ -33,6 +33,14 @@ public class CSSAEventRepository {
     return Optional.ofNullable(event);
   }
 
+  public Optional<CSSAEvent> findEventByName(String eventName) {
+    Query query = new Query();
+    query.addCriteria(Criteria.where("eventName").is(eventName));
+
+    CSSAEvent event = mongoTemplate.findOne(query, CSSAEvent.class);
+    return Optional.ofNullable(event);
+  }
+
   public Optional<List<CSSAEvent>> findAllEvents() {
     List<CSSAEvent> CSSAEvents = mongoTemplate.findAll(CSSAEvent.class);
     return Optional.ofNullable(CSSAEvents);
@@ -77,6 +85,12 @@ public class CSSAEventRepository {
 
   public boolean deleteById(String id) {
     Query query = new Query(Criteria.where("id").is(id));
+    DeleteResult result = mongoTemplate.remove(query, CSSAEvent.class);
+    return result.wasAcknowledged() && result.getDeletedCount() > 0;
+  }
+
+  public boolean deleteByName(String eventName) {
+    Query query = new Query(Criteria.where("eventName").is(eventName));
     DeleteResult result = mongoTemplate.remove(query, CSSAEvent.class);
     return result.wasAcknowledged() && result.getDeletedCount() > 0;
   }

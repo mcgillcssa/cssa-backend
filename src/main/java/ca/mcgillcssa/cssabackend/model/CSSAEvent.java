@@ -12,8 +12,6 @@ import lombok.ToString;
 @ToString
 
 public class CSSAEvent {
-  @Id
-  private String id;
   private String eventName;
   private LocalDate eventStartDate;
   private LocalDate eventEndDate;

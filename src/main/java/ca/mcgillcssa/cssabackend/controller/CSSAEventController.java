@@ -60,17 +60,17 @@ public class CSSAEventController {
     }
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<?> getEventById(@PathVariable String id) {
-    Optional<CSSAEvent> optionalEvent = cssaEventService.findEventById(id);
+  @GetMapping("/name/{eventName}")
+  public ResponseEntity<?> getEventByName(@PathVariable String eventName) {
+    Optional<CSSAEvent> optionalEvent = cssaEventService.findEventByName(eventName);
     Map<String, Object> response = new HashMap<>();
     if (optionalEvent.isPresent()) {
       CSSAEvent event = optionalEvent.get();
-      response.put("message", "Event found with id " + id);
+      response.put("message", "Event found with name " + eventName);
       response.put("event", new CSSAEventDTO(event));
       return ResponseEntity.status(HttpStatus.OK).body(response);
     } else {
-      response.put("message", "Event not found with id " + id);
+      response.put("message", "Event not found with name " + eventName);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
   }
@@ -127,15 +127,15 @@ public class CSSAEventController {
     }
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteEventById(@PathVariable String id) {
+  @DeleteMapping("/name/{name}")
+  public ResponseEntity<?> deleteEventByName(@PathVariable String name) {
     Map<String, Object> response = new HashMap<>();
-    boolean deleted = cssaEventService.deletEventById(id);
+    boolean deleted = cssaEventService.deleteEventByName(name);
     if (deleted) {
-      response.put("message", "Event with id " + id + " successfully deleted");
+      response.put("message", "Event with name " + name + " successfully deleted");
       return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    response.put("message", "Event with id " + id + " not found");
+    response.put("message", "Event with name " + name + " not found");
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 

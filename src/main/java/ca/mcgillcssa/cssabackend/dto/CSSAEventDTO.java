@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import ca.mcgillcssa.cssabackend.model.CSSAEvent;
 
@@ -12,7 +11,6 @@ import ca.mcgillcssa.cssabackend.model.CSSAEvent;
 @AllArgsConstructor
 
 public class CSSAEventDTO {
-  private String id;
   private String eventName;
   private LocalDate eventStartDate;
   private LocalDate eventEndDate;
@@ -22,7 +20,6 @@ public class CSSAEventDTO {
   private String eventLinkUrl;
 
   public CSSAEventDTO(CSSAEvent cssaEvent) {
-    this.id = cssaEvent.getId();
     this.eventName = cssaEvent.getEventName();
     this.eventStartDate = cssaEvent.getEventStartDate();
     this.eventEndDate = cssaEvent.getEventEndDate();
