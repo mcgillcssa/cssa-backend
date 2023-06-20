@@ -90,12 +90,13 @@ public class CSSAEventController {
     }
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<?> updateEvent(@PathVariable String id, @RequestBody CSSAEventRequestBody requestBody) {
+  @PutMapping("/name/{eventName}")
+  public ResponseEntity<?> updateEventByName(@PathVariable String eventName,
+      @RequestBody CSSAEventRequestBody requestBody) {
     Map<String, Object> response = new HashMap<>();
     try {
-      boolean updated = cssaEventService.updateEvent(
-          id,
+      boolean updated = cssaEventService.updateEventByName(
+          eventName,
           requestBody.getEventName(),
           requestBody.getEventStartDate(),
           requestBody.getEventEndDate(),
@@ -151,6 +152,15 @@ public class CSSAEventController {
     }
     response.put("message", "Event with name " + name + " not found");
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
+
+  @DeleteMapping("/all")
+  public ResponseEntity<?> deleteAllEvents() {
+    boolean deleted = cssaEventService.deleteAllEvents();
+    if (deleted) {
+      return ResponseEntity.ok("All events deleted successfully");
+    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No events found");
   }
 
   @Data

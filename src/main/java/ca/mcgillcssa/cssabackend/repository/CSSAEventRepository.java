@@ -28,11 +28,6 @@ public class CSSAEventRepository {
     return mongoTemplate.save(event);
   }
 
-  public Optional<CSSAEvent> findEventById(String id) {
-    CSSAEvent event = mongoTemplate.findById(id, CSSAEvent.class);
-    return Optional.ofNullable(event);
-  }
-
   public List<CSSAEvent> findAll() {
     return mongoTemplate.findAll(CSSAEvent.class);
   }
@@ -50,45 +45,12 @@ public class CSSAEventRepository {
     return Optional.ofNullable(CSSAEvents);
   }
 
-  public boolean updateCSSAEvent(String id, String eventName, LocalDate eventStartDate, LocalDate eventEndDate,
-      String eventLocation, String eventImageUrl, String eventDescription, String eventLinkUrl) {
-    Query query = new Query(Criteria.where("id").is(id));
-    Update update = new Update();
-
-    if (eventName != null && !eventName.isEmpty()) {
-      update.set("eventName", eventName);
-    }
-
-    if (eventStartDate.toString() != null && !eventStartDate.toString().isEmpty()) {
-      update.set("eventStartDate", eventStartDate);
-    }
-
-    if (eventEndDate.toString() != null && !eventEndDate.toString().isEmpty()) {
-      update.set("eventEndDate", eventEndDate);
-    }
-
-    if (eventLocation != null && !eventLocation.isEmpty()) {
-      update.set("eventLocation", eventLocation);
-    }
-
-    if (eventImageUrl != null && !eventImageUrl.isEmpty()) {
-      update.set("eventImageUrl", eventImageUrl);
-    }
-
-    if (eventDescription != null && !eventDescription.isEmpty()) {
-      update.set("eventDescription", eventDescription);
-    }
-
-    if (eventLinkUrl != null && !eventLinkUrl.isEmpty()) {
-      update.set("eventLinkUrl", eventLinkUrl);
-    }
-
-    UpdateResult updateResult = mongoTemplate.updateFirst(query, update, CSSAEvent.class);
-    return updateResult.wasAcknowledged() && updateResult.getModifiedCount() > 0;
+  public void save(CSSAEvent event) {
+    mongoTemplate.save(event);
   }
 
-  public boolean deleteById(String id) {
-    Query query = new Query(Criteria.where("id").is(id));
+  public boolean deleteAll() {
+    Query query = new Query();
     DeleteResult result = mongoTemplate.remove(query, CSSAEvent.class);
     return result.wasAcknowledged() && result.getDeletedCount() > 0;
   }
