@@ -60,7 +60,7 @@ public class CSSAEventService {
     return cssaEventRepository.deleteById(id);
   }
 
-  public boolean deletEventByName(String name) {
+  public boolean deleteEventByName(String name) {
     return cssaEventRepository.deleteByName(name);
   }
 

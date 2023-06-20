@@ -33,6 +33,10 @@ public class CSSAEventRepository {
     return Optional.ofNullable(event);
   }
 
+  public List<CSSAEvent> findAll() {
+    return mongoTemplate.findAll(CSSAEvent.class);
+  }
+
   public Optional<CSSAEvent> findEventByName(String eventName) {
     Query query = new Query();
     query.addCriteria(Criteria.where("eventName").is(eventName));

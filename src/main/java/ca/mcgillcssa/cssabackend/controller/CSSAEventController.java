@@ -127,6 +127,20 @@ public class CSSAEventController {
     }
   }
 
+  @GetMapping("/all")
+  public ResponseEntity<?> getAllEvents() {
+    List<CSSAEvent> events = cssaEventService.getAllEvents();
+    Map<String, Object> response = new HashMap<>();
+    if (!events.isEmpty()) {
+      response.put("message", "All events retrieved successfully");
+      response.put("events", events);
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+    } else {
+      response.put("message", "No events found");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+  }
+
   @DeleteMapping("/name/{name}")
   public ResponseEntity<?> deleteEventByName(@PathVariable String name) {
     Map<String, Object> response = new HashMap<>();
