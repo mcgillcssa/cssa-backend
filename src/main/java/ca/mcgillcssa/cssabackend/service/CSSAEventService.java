@@ -31,14 +31,28 @@ public class CSSAEventService {
           "Missing information: eventName, eventStartDate, eventEndDate, eventLocation, eventImageUrl, eventDescription and eventLinkUrl is required.");
     }
 
-    // No duplication tests
-
-    if (!UrlChecker.isValidUrl(eventImageUrl)) {
-      throw new IllegalArgumentException("CSSAEvent image url is not valid");
+    try {
+      if (eventImageUrl != null && !eventImageUrl.isEmpty()) {
+        UrlChecker urlChecker = UrlChecker.isValidUrl(eventImageUrl);
+        if (!urlChecker.isValid()) {
+          throw new IllegalArgumentException("event image url connection failed");
+        }
+        eventImageUrl = urlChecker.getUrl();
+      }
+    } catch (Exception e) {
+      throw new IllegalArgumentException("event image url format error");
     }
 
-    if (!UrlChecker.isValidUrl(eventLinkUrl)) {
-      throw new IllegalArgumentException("CSSAEvent link url is not valid");
+    try {
+      if (eventLinkUrl != null && !eventLinkUrl.isEmpty()) {
+        UrlChecker urlChecker = UrlChecker.isValidUrl(eventLinkUrl);
+        if (!urlChecker.isValid()) {
+          throw new IllegalArgumentException("event link url connection failed");
+        }
+        eventLinkUrl = urlChecker.getUrl();
+      }
+    } catch (Exception e) {
+      throw new IllegalArgumentException("event link url format error");
     }
 
     return cssaEventRepository.createEvent(newEvent);
@@ -107,13 +121,30 @@ public class CSSAEventService {
         throw new IllegalArgumentException("Nothing to be changed");
       }
 
-      if (eventImageUrl != null && !eventImageUrl.isEmpty() && !UrlChecker.isValidUrl(eventImageUrl)) {
-        throw new IllegalArgumentException("Event image URL is not valid");
+      try {
+        if (eventImageUrl != null && !eventImageUrl.isEmpty()) {
+          UrlChecker urlChecker = UrlChecker.isValidUrl(eventImageUrl);
+          if (!urlChecker.isValid()) {
+            throw new IllegalArgumentException("event image url connection failed");
+          }
+          eventImageUrl = urlChecker.getUrl();
+        }
+      } catch (Exception e) {
+        throw new IllegalArgumentException("event image url format error");
       }
 
-      if (eventLinkUrl != null && !eventLinkUrl.isEmpty() && !UrlChecker.isValidUrl(eventLinkUrl)) {
-        throw new IllegalArgumentException("Event link website URL is not valid");
+      try {
+        if (eventLinkUrl != null && !eventLinkUrl.isEmpty()) {
+          UrlChecker urlChecker = UrlChecker.isValidUrl(eventLinkUrl);
+          if (!urlChecker.isValid()) {
+            throw new IllegalArgumentException("event link url connection failed");
+          }
+          eventLinkUrl = urlChecker.getUrl();
+        }
+      } catch (Exception e) {
+        throw new IllegalArgumentException("event link url format error");
       }
+
       cssaEventRepository.deleteByName(eventName);
       cssaEventRepository.save(event);
       return true;
