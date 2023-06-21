@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class UrlChecker {
-
     private boolean valid;
     private String url;
 
