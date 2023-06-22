@@ -3,16 +3,11 @@ package ca.mcgillcssa.cssabackend.repository;
 import java.util.List;
 import java.util.Optional;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-
 import ca.mcgillcssa.cssabackend.model.CSSAEvent;
 import java.time.LocalDate;
 

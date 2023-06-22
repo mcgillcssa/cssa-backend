@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import ca.mcgillcssa.cssabackend.model.CSSAEvent;
