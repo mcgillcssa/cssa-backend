@@ -1,5 +1,7 @@
 package ca.mcgillcssa.cssabackend.repository;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import com.mongodb.client.result.DeleteResult;
@@ -57,14 +59,33 @@ public class CSSAEventRepository {
   }
 
   public List<CSSAEvent> findUpcomingEvents(int limit) {
-    Query query = new Query();
-    query.with(Sort.by(Sort.Direction.ASC, "eventStartDate")); // Sort events by start date
-    query.limit(limit); // Limit the number of returned events
+    List<CSSAEvent> events = new ArrayList<>();
 
-    // Return only future events
-    query.addCriteria(Criteria.where("eventStartDate").gt(LocalDate.now()));
+    Query upcomingQuery = new Query();
+    upcomingQuery.with(Sort.by(Sort.Direction.ASC, "eventStartDate")); // Sort events by start date
+    upcomingQuery.addCriteria(Criteria.where("eventStartDate").gt(LocalDate.now()));
+    upcomingQuery.limit(limit); // Limit the number of returned events
 
-    return mongoTemplate.find(query, CSSAEvent.class);
+    List<CSSAEvent> upcomingEvents = mongoTemplate.find(upcomingQuery, CSSAEvent.class);
+    events.addAll(upcomingEvents);
+
+    if (upcomingEvents.size() < limit) {
+      int pastEventsLimit = limit - upcomingEvents.size();
+
+      Query pastQuery = new Query();
+      pastQuery.with(Sort.by(Sort.Direction.DESC, "eventStartDate")); // Sort past events by start date in descending
+                                                                      // order
+      pastQuery.addCriteria(Criteria.where("eventStartDate").lt(LocalDate.now()));
+      pastQuery.limit(pastEventsLimit); // Limit the number of returned past events
+
+      List<CSSAEvent> pastEvents = mongoTemplate.find(pastQuery, CSSAEvent.class);
+      events.addAll(pastEvents);
+    }
+
+    // Sort all events in ascending order by date
+    events.sort(Comparator.comparing(CSSAEvent::getEventStartDate));
+
+    return events;
   }
 
 }
