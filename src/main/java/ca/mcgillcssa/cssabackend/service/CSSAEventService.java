@@ -29,6 +29,10 @@ public class CSSAEventService {
           "Missing information: eventName, eventStartDate, eventEndDate, eventLocation, eventImageUrl, eventDescription and eventLinkUrl is required.");
     }
 
+    if (eventStartDate.isAfter(eventEndDate)) {
+      throw new IllegalArgumentException("eventStartDate must be after than eventEndDate");
+    }
+
     try {
       if (eventImageUrl != null && !eventImageUrl.isEmpty()) {
         UrlChecker urlChecker = UrlChecker.isValidUrl(eventImageUrl);
@@ -141,6 +145,10 @@ public class CSSAEventService {
         }
       } catch (Exception e) {
         throw new IllegalArgumentException("event link url format error");
+      }
+
+      if (eventStartDate.isAfter(eventEndDate)) {
+        throw new IllegalArgumentException("eventStartDate must be after than eventEndDate");
       }
 
       cssaEventRepository.deleteByName(eventName);
