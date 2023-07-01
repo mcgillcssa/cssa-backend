@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import ca.mcgillcssa.cssabackend.model.CSSAEvent;
@@ -29,6 +27,10 @@ public class CSSAEventService {
         || eventImageUrl == null || eventDescription == null || eventLinkUrl == null) {
       throw new IllegalArgumentException(
           "Missing information: eventName, eventStartDate, eventEndDate, eventLocation, eventImageUrl, eventDescription and eventLinkUrl is required.");
+    }
+
+    if (eventStartDate.isAfter(eventEndDate)) {
+      throw new IllegalArgumentException("eventStartDate must be after than eventEndDate");
     }
 
     try {
@@ -143,6 +145,10 @@ public class CSSAEventService {
         }
       } catch (Exception e) {
         throw new IllegalArgumentException("event link url format error");
+      }
+
+      if (eventStartDate.isAfter(eventEndDate)) {
+        throw new IllegalArgumentException("eventStartDate must be after than eventEndDate");
       }
 
       cssaEventRepository.deleteByName(eventName);

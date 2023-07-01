@@ -1,6 +1,5 @@
 package ca.mcgillcssa.cssabackend.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class MembershipBenefit {
-  @Id
   private String merchantName;
   private String merchantBackgroundImageUrl;
   private String merchantDiscount;
@@ -20,20 +18,15 @@ public class MembershipBenefit {
   private MerchantType merchantType;
 
   public enum MerchantType {
-    RESTAURANT("主食"),
-    SWEETS("甜品饮品"),
-    SHOPPING("购物"),
-    BEAUTY("美甲美发"),
-    OTHER("其他");
+    RESTAURANT,
+    SWEETS,
+    SHOPPING,
+    BEAUTY,
+    OTHER;
 
-    private final String value;
-
-    MerchantType(String value) {
-      this.value = value;
-    }
-
-    public String getValue() {
-      return value;
+    @Override
+    public String toString() {
+      return name();
     }
   }
 }
