@@ -2,6 +2,7 @@ package ca.mcgillcssa.cssabackend.controller;
 
 import ca.mcgillcssa.cssabackend.dto.MembershipBenefitDTO;
 import ca.mcgillcssa.cssabackend.model.MembershipBenefit;
+import ca.mcgillcssa.cssabackend.model.MembershipBenefit.MerchantType;
 import ca.mcgillcssa.cssabackend.service.MembershipBenefitService;
 
 import org.springframework.dao.DataAccessException;
@@ -32,10 +33,15 @@ public class MembershipBenefitController {
     try {
       MembershipBenefit newBenefit = membershipBenefitService.createMembershipBenefit(
           requestBody.getMerchantName(),
-          requestBody.getMerchantBackgroundImageUrl(),
+          requestBody.getMerchantImageUrl(),
           requestBody.getMerchantDiscount(),
-          requestBody.getMerchantLogoUrl(),
-          requestBody.getMerchantType());
+          requestBody.getMerchantType(),
+          requestBody.getMerchantAddress(),
+          requestBody.getMerchantPhone(),
+          requestBody.getMerchantOpeningHours(),
+          requestBody.getMerchantPaymentMethods(),
+          requestBody.getMerchantImagesUrl(),
+          requestBody.getMerchantAlternativeName());
 
       response.put("message", "Membership Benefit created");
       response.put("membershipBenefit", new MembershipBenefitDTO(newBenefit));
@@ -76,10 +82,15 @@ public class MembershipBenefitController {
       boolean updated = membershipBenefitService.updateMembershipBenefitByMerchantName(
           merchantName,
           requestBody.getMerchantName(),
-          requestBody.getMerchantBackgroundImageUrl(),
+          requestBody.getMerchantImageUrl(),
           requestBody.getMerchantDiscount(),
-          requestBody.getMerchantLogoUrl(),
-          requestBody.getMerchantType());
+          requestBody.getMerchantType(),
+          requestBody.getMerchantAddress(),
+          requestBody.getMerchantPhone(),
+          requestBody.getMerchantOpeningHours(),
+          requestBody.getMerchantPaymentMethods(),
+          requestBody.getMerchantImagesUrl(),
+          requestBody.getMerchantAlternativeName());
 
       if (updated) {
         response.put("message", "Membership Benefit updated successfully.");
@@ -139,10 +150,16 @@ public class MembershipBenefitController {
   @ToString
   public static class MembershipBenefitRequestBody {
     private String merchantName;
-    private String merchantBackgroundImageUrl;
-    private String merchantDiscount;
-    private String merchantLogoUrl;
+    private String merchantImageUrl;
     private String merchantType;
+
+    private String merchantAlternativeName;
+    private List<String> merchantImagesUrl;
+    private String merchantAddress;
+    private String merchantPhone;
+    private String merchantOpeningHours;
+    private String merchantDiscount;
+    private String merchantPaymentMethods;
 
     // Getters and setters
   }
