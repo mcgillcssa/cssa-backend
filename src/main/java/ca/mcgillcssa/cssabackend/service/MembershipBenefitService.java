@@ -2,6 +2,9 @@ package ca.mcgillcssa.cssabackend.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import ca.mcgillcssa.cssabackend.model.MembershipBenefit;
 import ca.mcgillcssa.cssabackend.model.MembershipBenefit.MerchantType;
@@ -90,6 +93,12 @@ public class MembershipBenefitService {
 
   public boolean deleteAll() {
     return memebershipBenefitRepository.deleteAll();
+  }
+
+  public Map<MerchantType, List<MembershipBenefit>> getAllByMerchantType() {
+    List<MembershipBenefit> benefits = memebershipBenefitRepository.findAll();
+    return benefits.stream()
+        .collect(Collectors.groupingBy(MembershipBenefit::getMerchantType));
   }
 
   public boolean updateMembershipBenefitByMerchantName(String merchantName, String newMerchantName,

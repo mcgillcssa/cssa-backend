@@ -125,6 +125,22 @@ public class MembershipBenefitController {
     }
   }
 
+  @GetMapping("/allByMerchantType")
+  public ResponseEntity<?> getAllByMerchantType() {
+    Map<MembershipBenefit.MerchantType, List<MembershipBenefit>> benefitsByType = membershipBenefitService
+        .getAllByMerchantType();
+    Map<String, Object> response = new HashMap<>();
+
+    if (!benefitsByType.isEmpty()) {
+      response.put("message", "All benefits retrieved successfully");
+      response.put("benefitsByType", benefitsByType);
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+    } else {
+      response.put("message", "No benefits found");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+  }
+
   @DeleteMapping("/name/{merchantName}")
   public ResponseEntity<?> deleteMembershipBenefitByMerchantName(@PathVariable String merchantName) {
     Map<String, Object> response = new HashMap<>();
