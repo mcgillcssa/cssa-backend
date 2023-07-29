@@ -33,7 +33,7 @@ public class MembershipBenefitController {
     try {
       MembershipBenefit newBenefit = membershipBenefitService.createMembershipBenefit(
           requestBody.getMerchantName(),
-          requestBody.getMerchantImageUrl(),
+          requestBody.getStripeUrl(),
           requestBody.getMerchantDiscount(),
           requestBody.getMerchantType(),
           requestBody.getMerchantAddress(),
@@ -82,7 +82,7 @@ public class MembershipBenefitController {
       boolean updated = membershipBenefitService.updateMembershipBenefitByMerchantName(
           merchantName,
           requestBody.getMerchantName(),
-          requestBody.getMerchantImageUrl(),
+          requestBody.getStripeUrl(),
           requestBody.getMerchantDiscount(),
           requestBody.getMerchantType(),
           requestBody.getMerchantAddress(),
@@ -150,7 +150,7 @@ public class MembershipBenefitController {
   @ToString
   public static class MembershipBenefitRequestBody {
     private String merchantName;
-    private String merchantImageUrl;
+    private String stripeUrl;
     private String merchantType;
 
     private String merchantAlternativeName;

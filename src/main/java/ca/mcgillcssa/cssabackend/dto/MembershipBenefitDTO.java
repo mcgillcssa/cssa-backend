@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.List;
 
 import ca.mcgillcssa.cssabackend.model.MembershipBenefit;
-import ca.mcgillcssa.cssabackend.model.MembershipBenefit.MerchantType;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +13,7 @@ import ca.mcgillcssa.cssabackend.model.MembershipBenefit.MerchantType;
 public class MembershipBenefitDTO {
   private String merchantName;
   private String merchantAlternativeName;
-  private String merchantImageUrl;
+  private String stripeUrl;
   private String merchantType;
 
   private List<String> merchantImagesUrl;
@@ -26,7 +25,7 @@ public class MembershipBenefitDTO {
 
   public MembershipBenefitDTO(MembershipBenefit membershipBenefit) {
     this.merchantName = membershipBenefit.getMerchantName();
-    this.merchantImageUrl = membershipBenefit.getMerchantImageUrl();
+    this.stripeUrl = membershipBenefit.getStripeUrl();
     this.merchantDiscount = membershipBenefit.getMerchantDiscount();
     this.merchantType = membershipBenefit.getMerchantType().toString();
     this.merchantAlternativeName = membershipBenefit.getMerchantAlternativeName();

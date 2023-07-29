@@ -16,11 +16,11 @@ public class MembershipBenefitService {
     this.memebershipBenefitRepository = memebershipBenefitRepository;
   }
 
-  public MembershipBenefit createMembershipBenefit(String merchantName, String merchantImageUrl,
+  public MembershipBenefit createMembershipBenefit(String merchantName, String stripeUrl,
       String merchantDiscount, String merchantType, String merchantAddress, String merchantPhone,
       String merchantOpeningHours, String merchantPaymentMethods, List<String> merchantImagesUrl,
       String merchantAlternativeName) {
-    if (merchantName == null || merchantImageUrl == null || merchantDiscount == null || merchantType == null
+    if (merchantName == null || stripeUrl == null || merchantDiscount == null || merchantType == null
         || merchantAddress == null || merchantPhone == null || merchantPaymentMethods == null ||
         merchantImagesUrl == null || merchantOpeningHours == null || merchantAlternativeName == null) {
       throw new IllegalArgumentException(
@@ -43,12 +43,12 @@ public class MembershipBenefitService {
     }
 
     try {
-      if (merchantImageUrl != null && !merchantImageUrl.isEmpty()) {
-        UrlChecker urlChecker = UrlChecker.isValidUrl(merchantImageUrl);
+      if (stripeUrl != null && !stripeUrl.isEmpty()) {
+        UrlChecker urlChecker = UrlChecker.isValidUrl(stripeUrl);
         if (!urlChecker.isValid()) {
           throw new IllegalArgumentException("merchant image url connection failed");
         }
-        merchantImageUrl = urlChecker.getUrl();
+        stripeUrl = urlChecker.getUrl();
       }
     } catch (Exception e) {
       throw new IllegalArgumentException("merchant image url format error");
@@ -68,7 +68,7 @@ public class MembershipBenefitService {
       }
     }
 
-    MembershipBenefit newMembershipBenefit = new MembershipBenefit(merchantName, merchantImageUrl,
+    MembershipBenefit newMembershipBenefit = new MembershipBenefit(merchantName, stripeUrl,
         merchantTypeEnum, merchantAlternativeName, merchantImagesUrl, merchantAddress, merchantPhone,
         merchantOpeningHours,
         merchantDiscount, merchantPaymentMethods);
@@ -93,7 +93,7 @@ public class MembershipBenefitService {
   }
 
   public boolean updateMembershipBenefitByMerchantName(String merchantName, String newMerchantName,
-      String newMerchantImageUrl,
+      String newStripeUrl,
       String newMerchantDiscount, String newMerchantType, String newMerchantAddress, String newMerchantPhone,
       String newMerchantOpeningHours, String newMerchantPaymentMethods, List<String> newMerchantImagesUrl,
       String newMerchantAlternativeName) {
@@ -135,9 +135,9 @@ public class MembershipBenefitService {
         hasChanges = true;
       }
 
-      if (newMerchantImageUrl != null
-          && !newMerchantImageUrl.equals(membershipBenefit.getMerchantImageUrl())) {
-        membershipBenefit.setMerchantImageUrl(newMerchantImageUrl);
+      if (newStripeUrl != null
+          && !newStripeUrl.equals(membershipBenefit.getStripeUrl())) {
+        membershipBenefit.setStripeUrl(newStripeUrl);
         hasChanges = true;
       }
       if (newMerchantDiscount != null && !newMerchantDiscount.equals(membershipBenefit.getMerchantDiscount())) {
@@ -158,20 +158,20 @@ public class MembershipBenefitService {
         }
       }
 
-      if (newMerchantImageUrl != null) {
+      if (newStripeUrl != null) {
         try {
-          if (newMerchantImageUrl != null && !newMerchantImageUrl.isEmpty()) {
-            UrlChecker urlChecker = UrlChecker.isValidUrl(newMerchantImageUrl);
+          if (newStripeUrl != null && !newStripeUrl.isEmpty()) {
+            UrlChecker urlChecker = UrlChecker.isValidUrl(newStripeUrl);
             if (!urlChecker.isValid()) {
               throw new IllegalArgumentException("merchant image url connection failed");
             }
-            newMerchantImageUrl = urlChecker.getUrl();
+            newStripeUrl = urlChecker.getUrl();
           }
         } catch (Exception e) {
           throw new IllegalArgumentException("merchant image url format error");
         }
-        if (!newMerchantImageUrl.equals(membershipBenefit.getMerchantImageUrl())) {
-          membershipBenefit.setMerchantImageUrl(newMerchantImageUrl);
+        if (!newStripeUrl.equals(membershipBenefit.getStripeUrl())) {
+          membershipBenefit.setStripeUrl(newStripeUrl);
           hasChanges = true;
         }
       }

@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class MembershipBenefit {
   private String merchantName;
-  private String merchantImageUrl;
+  private String stripeUrl;
   private MerchantType merchantType;
 
   private String merchantAlternativeName;
