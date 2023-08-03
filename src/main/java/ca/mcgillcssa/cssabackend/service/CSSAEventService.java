@@ -147,7 +147,7 @@ public class CSSAEventService {
         throw new IllegalArgumentException("event link url format error");
       }
 
-      if (eventStartDate.isAfter(eventEndDate)) {
+      if (eventStartDate != null && eventStartDate.isAfter(eventEndDate)) {
         throw new IllegalArgumentException("eventStartDate must be after than eventEndDate");
       }
 
