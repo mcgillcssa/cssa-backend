@@ -2,6 +2,8 @@ package ca.mcgillcssa.cssabackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,14 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CssaBackendApplication {
 
   public static void main(String[] args) {
-    try {
-      SpringApplication app = new SpringApplication(CssaBackendApplication.class);
-      app.run(args);
-      System.out.println("Backend now running on port 8080!");
-    } catch (Exception e) {
-      System.err.println("An error occurred while running the application:");
-      e.printStackTrace(System.err);
-    }
+    SpringApplication app = new SpringApplication(CssaBackendApplication.class);
+    app.addListeners(new ApplicationListener<ApplicationReadyEvent>() {
+      @Override
+      public void onApplicationEvent(ApplicationReadyEvent event) {
+        String port = event.getApplicationContext().getEnvironment().getProperty("server.port");
+        System.out.println("Backend now running on port " + port + "!");
+      }
+    });
+    app.run(args);
   }
 
   @Bean
