@@ -2,7 +2,6 @@ package ca.mcgillcssa.cssabackend.controller;
 
 import ca.mcgillcssa.cssabackend.dto.MembershipBenefitDTO;
 import ca.mcgillcssa.cssabackend.model.MembershipBenefit;
-import ca.mcgillcssa.cssabackend.model.MembershipBenefit.MerchantType;
 import ca.mcgillcssa.cssabackend.service.MembershipBenefitService;
 
 import org.springframework.dao.DataAccessException;
