@@ -1,7 +1,9 @@
 package ca.mcgillcssa.cssabackend.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.Map;
 
@@ -95,8 +97,11 @@ public class MembershipBenefitService {
 
   public Map<String, List<MembershipBenefit>> getAllByMerchantType() {
     List<MembershipBenefit> benefits = memebershipBenefitRepository.findAll();
+
+    // Sort by merchantName first
     return benefits.stream()
-        .collect(Collectors.groupingBy(MembershipBenefit::getMerchantType));
+        .sorted(Comparator.comparing(MembershipBenefit::getMerchantName))
+        .collect(Collectors.groupingBy(MembershipBenefit::getMerchantType, TreeMap::new, Collectors.toList()));
   }
 
   public boolean updateMembershipBenefitByMerchantName(String merchantName, String newMerchantName,
