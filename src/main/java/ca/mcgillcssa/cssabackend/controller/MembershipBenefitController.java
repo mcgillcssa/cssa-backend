@@ -126,7 +126,7 @@ public class MembershipBenefitController {
 
   @GetMapping("/allByMerchantType")
   public ResponseEntity<?> getAllByMerchantType() {
-    Map<MembershipBenefit.MerchantType, List<MembershipBenefit>> benefitsByType = membershipBenefitService
+    Map<String, List<MembershipBenefit>> benefitsByType = membershipBenefitService
         .getAllByMerchantType();
     Map<String, Object> response = new HashMap<>();
 

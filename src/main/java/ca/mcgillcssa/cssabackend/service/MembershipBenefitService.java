@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import ca.mcgillcssa.cssabackend.model.MembershipBenefit;
-import ca.mcgillcssa.cssabackend.model.MembershipBenefit.MerchantType;
 import ca.mcgillcssa.cssabackend.repository.MemebershipBenefitRepository;
 import ca.mcgillcssa.cssabackend.util.UrlChecker;
+import ca.mcgillcssa.cssabackend.util.MerchantTypeChecker;
 
 @Service
 public class MembershipBenefitService {
@@ -38,13 +38,6 @@ public class MembershipBenefitService {
           "A Benefit with given name already exists");
     }
 
-    MerchantType merchantTypeEnum;
-    try {
-      merchantTypeEnum = MerchantType.valueOf(merchantType);
-    } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException("merchantType is not valid");
-    }
-
     try {
       if (stripeUrl != null && !stripeUrl.isEmpty()) {
         UrlChecker urlChecker = UrlChecker.isValidUrl(stripeUrl);
@@ -71,8 +64,13 @@ public class MembershipBenefitService {
       }
     }
 
+    if (!MerchantTypeChecker.isValidMerchantType(merchantType)) {
+      throw new IllegalArgumentException(
+          "Invalid merchant Type. Valid types are: RESTAURANT,SWEETS,SHOPPING,BEAUTY,OTHER");
+    }
+
     MembershipBenefit newMembershipBenefit = new MembershipBenefit(merchantName, stripeUrl,
-        merchantTypeEnum, merchantAlternativeName, merchantImagesUrl, merchantAddress, merchantPhone,
+        merchantType, merchantAlternativeName, merchantImagesUrl, merchantAddress, merchantPhone,
         merchantOpeningHours,
         merchantDiscount, merchantPaymentMethods);
 
@@ -95,7 +93,7 @@ public class MembershipBenefitService {
     return memebershipBenefitRepository.deleteAll();
   }
 
-  public Map<MerchantType, List<MembershipBenefit>> getAllByMerchantType() {
+  public Map<String, List<MembershipBenefit>> getAllByMerchantType() {
     List<MembershipBenefit> benefits = memebershipBenefitRepository.findAll();
     return benefits.stream()
         .collect(Collectors.groupingBy(MembershipBenefit::getMerchantType));
@@ -154,17 +152,13 @@ public class MembershipBenefitService {
         hasChanges = true;
       }
 
-      if (newMerchantType != null) {
-        MerchantType merchantTypeEnum;
-        try {
-          merchantTypeEnum = MerchantType.valueOf(newMerchantType);
-        } catch (IllegalArgumentException e) {
-          throw new IllegalArgumentException("merchantType is not valid");
+      if (newMerchantType != null && !newMerchantType.equals(membershipBenefit.getMerchantType())) {
+        if (!MerchantTypeChecker.isValidMerchantType(newMerchantType)) {
+          throw new IllegalArgumentException(
+              "Invalid merchant Type. Valid types are: RESTAURANT,SWEETS,SHOPPING,BEAUTY,OTHER");
         }
-        if (!merchantTypeEnum.equals(membershipBenefit.getMerchantType())) {
-          membershipBenefit.setMerchantType(merchantTypeEnum);
-          hasChanges = true;
-        }
+        membershipBenefit.setMerchantType(newMerchantType);
+        hasChanges = true;
       }
 
       if (newStripeUrl != null) {
