@@ -13,7 +13,7 @@ import lombok.ToString;
 public class MembershipBenefit {
   private String merchantName;
   private String stripeUrl;
-  private MerchantType merchantType;
+  private String merchantType;
 
   private String merchantAlternativeName;
   private List<String> merchantImagesUrl;
@@ -22,17 +22,4 @@ public class MembershipBenefit {
   private String merchantOpeningHours;
   private String merchantDiscount;
   private String merchantPaymentMethods;
-
-  public enum MerchantType {
-    RESTAURANT,
-    SWEETS,
-    SHOPPING,
-    BEAUTY,
-    OTHER;
-
-    @Override
-    public String toString() {
-      return name();
-    }
-  }
 }
