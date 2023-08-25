@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/cssa-backend-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT $JAVA_OPTS --spring.profiles.active=prod -jar build/libs/cssa-backend-1.0.0.jar

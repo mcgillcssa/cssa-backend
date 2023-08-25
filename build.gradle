@@ -39,3 +39,20 @@ application {
 bootJar {
     launchScript()
 }
+bootRun {
+    if (project.hasProperty('springProfile')) {
+        args = ["--spring.profiles.active=${springProfile}"]
+    }
+}
+
+task runDev(dependsOn: 'bootRun') {
+    doLast {
+        bootRun.args = ["--spring.profiles.active=dev"]
+    }
+}
+
+task runProd(dependsOn: 'bootRun') {
+  doLast {
+    bootRun.args = ["--spring.profiles.active=prod"]
+  }
+}
