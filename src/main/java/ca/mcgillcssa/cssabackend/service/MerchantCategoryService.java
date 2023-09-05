@@ -29,7 +29,7 @@ public class MerchantCategoryService {
 
     if (!MerchantTypeChecker.isValidMerchantType(merchantType)) {
       throw new IllegalArgumentException(
-          "Invalid merchant Type. Valid types are: RESTAURANT,SWEETS,SHOPPING,BEAUTY,OTHER");
+          "Invalid merchant Type. Valid types are: 主食，餐厅, 甜品，饮品, 生活，娱乐, 购物, 其他");
     }
 
     MerchantCategory newMerchantCategory = new MerchantCategory(merchantType, merchantCategoryUrl);

@@ -1,6 +1,8 @@
 package ca.mcgillcssa.cssabackend.service;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -68,7 +70,7 @@ public class MembershipBenefitService {
 
     if (!MerchantTypeChecker.isValidMerchantType(merchantType)) {
       throw new IllegalArgumentException(
-          "Invalid merchant Type. Valid types are: RESTAURANT,SWEETS,SHOPPING,BEAUTY,OTHER");
+          "Invalid merchant Type. Valid types are: 主食，餐厅, 甜品，饮品, 生活，娱乐, 购物, 其他");
     }
 
     MembershipBenefit newMembershipBenefit = new MembershipBenefit(merchantName, stripeUrl,
@@ -98,10 +100,42 @@ public class MembershipBenefitService {
   public Map<String, List<MembershipBenefit>> getAllByMerchantType() {
     List<MembershipBenefit> benefits = memebershipBenefitRepository.findAll();
 
-    // Sort by merchantName first
-    return benefits.stream()
-        .sorted(Comparator.comparing(MembershipBenefit::getMerchantName))
-        .collect(Collectors.groupingBy(MembershipBenefit::getMerchantType, TreeMap::new, Collectors.toList()));
+    // Define a custom order for merchantType
+    Map<String, Integer> customOrder = new HashMap<>();
+    customOrder.put("主食，餐厅", 1);
+    customOrder.put("甜品，饮品", 2);
+    customOrder.put("生活，娱乐", 3);
+    customOrder.put("购物", 4);
+    customOrder.put("其他", 5);
+
+    // Sort by merchantType using the custom order
+    Comparator<MembershipBenefit> customComparator = Comparator
+        .comparing(benefit -> customOrder.getOrDefault(benefit.getMerchantType(), Integer.MAX_VALUE));
+
+    // First, sort and group in a temporary map
+    Map<String, List<MembershipBenefit>> tempMap = benefits.stream()
+        .sorted(customComparator.thenComparing(MembershipBenefit::getMerchantName))
+        .collect(Collectors.groupingBy(MembershipBenefit::getMerchantType));
+
+    // Create a LinkedHashMap to store the final result in the desired order
+    Map<String, List<MembershipBenefit>> sortedMap = new LinkedHashMap<>();
+
+    // Populate sortedMap based on the custom order
+    for (String key : customOrder.keySet().stream().sorted(Comparator.comparing(customOrder::get))
+        .collect(Collectors.toList())) {
+      if (tempMap.containsKey(key)) {
+        sortedMap.put(key, tempMap.get(key));
+      }
+    }
+
+    // Insert any remaining groups that were not in the custom order
+    for (Map.Entry<String, List<MembershipBenefit>> entry : tempMap.entrySet()) {
+      if (!sortedMap.containsKey(entry.getKey())) {
+        sortedMap.put(entry.getKey(), entry.getValue());
+      }
+    }
+
+    return sortedMap;
   }
 
   public boolean updateMembershipBenefitByMerchantName(String merchantName, String newMerchantName,
@@ -160,7 +194,7 @@ public class MembershipBenefitService {
       if (newMerchantType != null && !newMerchantType.equals(membershipBenefit.getMerchantType())) {
         if (!MerchantTypeChecker.isValidMerchantType(newMerchantType)) {
           throw new IllegalArgumentException(
-              "Invalid merchant Type. Valid types are: RESTAURANT,SWEETS,SHOPPING,BEAUTY,OTHER");
+              "Invalid merchant Type. Valid types are: 主食，餐厅, 甜品，饮品, 生活，娱乐, 购物, 其他");
         }
         membershipBenefit.setMerchantType(newMerchantType);
         hasChanges = true;
