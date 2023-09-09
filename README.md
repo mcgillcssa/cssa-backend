@@ -21,6 +21,9 @@ Once you have installed the required software, follow these steps to set up and 
    -Unix
    `export DB_PASSWORD=<password>`
 4. Run the application using the following command:
-   `./gradlew bootRun`
+   -Production environment
+   `./gradlew bootRun -PspringProfile=prod`
+   -Development environment
+   `./gradlew bootRun -PspringProfile=dev`
 
 This will start the application on `http://localhost:8080`.
