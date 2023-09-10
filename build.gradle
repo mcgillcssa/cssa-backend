@@ -56,3 +56,18 @@ task runProd(dependsOn: 'bootRun') {
     bootRun.args = ["--spring.profiles.active=prod"]
   }
 }
+
+task replacePropertiesFile(type: Copy) {
+    def profile = project.findProperty('springProfile') ?: 'dev'
+    from "src/main/resources/"
+    include "application-${profile}.properties"
+    into 'src/main/resources/'
+    eachFile { FileCopyDetails details ->
+        details.name = 'application.properties'
+    }
+    mustRunAfter clean
+}
+
+processResources.dependsOn replacePropertiesFile
+
+
