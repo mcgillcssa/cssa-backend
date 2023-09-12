@@ -232,6 +232,7 @@ public class MembershipBenefitService {
           }
         }
         membershipBenefit.setMerchantImagesUrl(newMerchantImagesUrl);
+        hasChanges = true;
       }
 
       if (!hasChanges) {
