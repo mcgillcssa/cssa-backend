@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.Map;
 
@@ -233,6 +232,7 @@ public class MembershipBenefitService {
           }
         }
         membershipBenefit.setMerchantImagesUrl(newMerchantImagesUrl);
+        hasChanges = true;
       }
 
       if (!hasChanges) {
