@@ -36,8 +36,8 @@ public class SponsorController {
         private String sponsorName;
         private String coopDuration;
         private String sponsorImageUrl;
-        private String sponsorWebsiteUrl;
         private String sponsorClass;
+        private String sponsorDescription;
     }
 
     private final SponsorService sponsorService;
@@ -54,8 +54,9 @@ public class SponsorController {
         try {
             Sponsor newSponsor = sponsorService.createSponsor(requestBody.getSponsorName(),
                     requestBody.getCoopDuration(),
-                    requestBody.getSponsorImageUrl(), requestBody.getSponsorWebsiteUrl(),
-                    requestBody.getSponsorClass());
+                    requestBody.getSponsorImageUrl(),
+                    requestBody.getSponsorClass(),
+                    requestBody.getSponsorDescription());
             response.put(msgStr, "Sponsor created");
             response.put(sponsorStr, new SponsorDTO(newSponsor));
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -159,8 +160,9 @@ public class SponsorController {
         try {
             sponsorService.updateSponsor(sponsorName,
                     requestBody.getCoopDuration(),
-                    requestBody.getSponsorImageUrl(), requestBody.getSponsorWebsiteUrl(),
-                    requestBody.getSponsorClass());
+                    requestBody.getSponsorImageUrl(),
+                    requestBody.getSponsorClass(),
+                    requestBody.getSponsorDescription());
             response.put(msgStr, "Sponsor updated with name: " + sponsorName);
             response.put(sponsorStr, new SponsorDTO(sponsorService.findSponsorByName(sponsorName).get()));
             return ResponseEntity.status(HttpStatus.OK).body(response);

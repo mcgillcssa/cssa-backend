@@ -11,14 +11,13 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @ToString
-
 public class Sponsor {
   @Id
   private String sponsorName;
   private CoopDuration coopDuration;
   private String sponsorImageUrl;
-  private String sponsorWebsiteUrl;
   private SponsorClass sponsorClass;
+  private String sponsorDescription;
 
   public enum CoopDuration {
     QUARTER_YEAR,
@@ -31,9 +30,9 @@ public class Sponsor {
   }
 
   public enum SponsorClass {
-    PLATINUM,
-    GOLD,
-    SILVER;
+    DIAMOND_EXCLUSIVE,
+    DIAMOND,
+    GOLD;
 
     @Override
     public String toString() {

@@ -23,40 +23,37 @@ public class SponsorRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    // Create single
     public Sponsor createSponsor(Sponsor sponsor) {
         return mongoTemplate.save(sponsor);
     }
 
-    // Find single
     public Optional<Sponsor> findSponsorByName(String sponsorName) {
         Query query = new Query(Criteria.where("sponsorName").is(sponsorName));
         return Optional.ofNullable(mongoTemplate.findOne(query, Sponsor.class));
     }
 
-    // Find many
     public List<Sponsor> findAllSponsors() {
         return mongoTemplate.findAll(Sponsor.class);
     }
 
     public List<Sponsor> findSponsorsByClass(String sponsorClass) {
-        return mongoTemplate.find(new Query(Criteria.where("sponsorClass").is(sponsorClass)), Sponsor.class);
+        Query query = new Query(Criteria.where("sponsorClass").is(sponsorClass));
+        return mongoTemplate.find(query, Sponsor.class);
     }
 
     public List<Sponsor> findSponsorsByCoopDuration(String coopDuration) {
-        return mongoTemplate.find(new Query(Criteria.where("coopDuration").is(coopDuration)), Sponsor.class);
+        Query query = new Query(Criteria.where("coopDuration").is(coopDuration));
+        return mongoTemplate.find(query, Sponsor.class);
     }
 
-    // Delete single
     public boolean deleteSponsorByName(String sponsorName) {
         Query query = new Query(Criteria.where("sponsorName").is(sponsorName));
         DeleteResult deleteResult = mongoTemplate.remove(query, Sponsor.class);
         return deleteResult.wasAcknowledged() && deleteResult.getDeletedCount() > 0;
     }
 
-    // Update single
-    public boolean updateSponsor(String name, String coopDuration, String sponsorImageUrl, String sponsorWebsiteUrl,
-            String sponsorClass) {
+    public boolean updateSponsor(String name, String coopDuration, String sponsorImageUrl,
+            String sponsorClass, String sponsorDescription) {
         Query query = new Query(Criteria.where("sponsorName").is(name));
         Update update = new Update();
 
@@ -68,8 +65,8 @@ public class SponsorRepository {
             update.set("sponsorImageUrl", sponsorImageUrl);
         }
 
-        if (sponsorWebsiteUrl != null && !sponsorWebsiteUrl.isEmpty()) {
-            update.set("sponsorWebsiteUrl", sponsorWebsiteUrl);
+        if (sponsorDescription != null && !sponsorDescription.isEmpty()) {
+            update.set("sponsorDescription", sponsorDescription);
         }
 
         if (sponsorClass != null && !sponsorClass.isEmpty()) {

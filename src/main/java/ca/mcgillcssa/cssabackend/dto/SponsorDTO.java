@@ -11,14 +11,14 @@ public class SponsorDTO {
     private String sponsorName;
     private String coopDuration;
     private String sponsorImageUrl;
-    private String sponsorWebsiteUrl;
+    private String sponsorDescription;
     private String sponsorClass;
 
     public SponsorDTO(Sponsor sponsor) {
         this.sponsorName = sponsor.getSponsorName();
         this.coopDuration = sponsor.getCoopDuration().toString();
         this.sponsorImageUrl = sponsor.getSponsorImageUrl();
-        this.sponsorWebsiteUrl = sponsor.getSponsorWebsiteUrl();
         this.sponsorClass = sponsor.getSponsorClass().toString();
+        this.sponsorDescription = sponsor.getSponsorDescription();
     }
 }
