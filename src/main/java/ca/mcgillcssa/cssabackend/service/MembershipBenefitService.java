@@ -69,7 +69,7 @@ public class MembershipBenefitService {
 
     if (!MerchantTypeChecker.isValidMerchantType(merchantType)) {
       throw new IllegalArgumentException(
-          "Invalid merchant Type. Valid types are: 主食，餐厅, 甜品，饮品, 生活，娱乐, 购物, 其他");
+          "Invalid merchant Type. Valid types are: 餐厅 Restaurants, 甜点饮品 Desserts & Drinks, 生活娱乐 Life & Entertainment, 购物 Shopping, 其他 Others");
     }
 
     MembershipBenefit newMembershipBenefit = new MembershipBenefit(merchantName, stripeUrl,
@@ -101,11 +101,11 @@ public class MembershipBenefitService {
 
     // Define a custom order for merchantType
     Map<String, Integer> customOrder = new HashMap<>();
-    customOrder.put("主食，餐厅", 1);
-    customOrder.put("甜品，饮品", 2);
-    customOrder.put("生活，娱乐", 3);
-    customOrder.put("购物", 4);
-    customOrder.put("其他", 5);
+    customOrder.put("餐厅 Restaurants", 1);
+    customOrder.put("甜点饮品 Desserts & Drinks", 2);
+    customOrder.put("生活娱乐 Life & Entertainment", 3);
+    customOrder.put("购物 Shopping", 4);
+    customOrder.put("其他 Others", 5);
 
     // Sort by merchantType using the custom order
     Comparator<MembershipBenefit> customComparator = Comparator
@@ -193,7 +193,7 @@ public class MembershipBenefitService {
       if (newMerchantType != null && !newMerchantType.equals(membershipBenefit.getMerchantType())) {
         if (!MerchantTypeChecker.isValidMerchantType(newMerchantType)) {
           throw new IllegalArgumentException(
-              "Invalid merchant Type. Valid types are: 主食，餐厅, 甜品，饮品, 生活，娱乐, 购物, 其他");
+              "Invalid merchant Type. Valid types are: 餐厅 Restaurants, 甜点饮品 Desserts & Drinks, 生活娱乐 Life & Entertainment, 购物 Shopping, 其他 Others");
         }
         membershipBenefit.setMerchantType(newMerchantType);
         hasChanges = true;
