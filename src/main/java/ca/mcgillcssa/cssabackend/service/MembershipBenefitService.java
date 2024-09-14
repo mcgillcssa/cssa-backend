@@ -101,11 +101,11 @@ public class MembershipBenefitService {
 
     // Define a custom order for merchantType
     Map<String, Integer> customOrder = new HashMap<>();
-    customOrder.put("餐厅 Restaurants", 1);
-    customOrder.put("甜点饮品 Desserts & Drinks", 2);
-    customOrder.put("生活娱乐 Life & Entertainment", 3);
-    customOrder.put("购物 Shopping", 4);
-    customOrder.put( "超值折扣 Special Offers", 5);
+    customOrder.put("超值折扣 Special Offers", 1);
+    customOrder.put("餐厅 Restaurants", 2);
+    customOrder.put("甜点饮品 Desserts & Drinks", 3);
+    customOrder.put("生活娱乐 Life & Entertainment", 4);
+    customOrder.put("购物 Shopping", 5);
     customOrder.put("其他 Others", 6);
 
     // Sort by merchantType using the custom order
