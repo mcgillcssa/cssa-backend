@@ -3,6 +3,7 @@ package ca.mcgillcssa.cssabackend.service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +79,10 @@ public class CSSAEventService {
 
   public List<CSSAEvent> getAllEvents() {
     return cssaEventRepository.findAll();
+  }
+
+  public Map<Integer, List<CSSAEvent>> getAllEventsByYear() {
+    return cssaEventRepository.findAllEventsByYear();
   }
 
   public boolean updateEventByName(String eventName, String newEventName, LocalDate eventStartDate,

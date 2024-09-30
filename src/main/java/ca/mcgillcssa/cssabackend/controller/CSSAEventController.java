@@ -141,6 +141,19 @@ public class CSSAEventController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
   }
+  @GetMapping("/all-by-year")
+  public ResponseEntity<?> getAllEventsByYear() {
+    Map<Integer, List<CSSAEvent>> events = cssaEventService.getAllEventsByYear();
+    Map<String, Object> response = new HashMap<>();
+    if (!events.isEmpty()) {
+      response.put("message", "All events mapped by year retrieved successfully");
+      response.put("events", events);
+      return ResponseEntity.status(HttpStatus.OK).body(response);
+    } else {
+      response.put("message", "No events found");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+  }
 
   @DeleteMapping("/name/{name}")
   public ResponseEntity<?> deleteEventByName(@PathVariable String name) {

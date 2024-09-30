@@ -1,9 +1,15 @@
 package ca.mcgillcssa.cssabackend.repository;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import java.time.Year;
+
 import com.mongodb.client.result.DeleteResult;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -73,8 +79,7 @@ public class CSSAEventRepository {
       int pastEventsLimit = limit - upcomingEvents.size();
 
       Query pastQuery = new Query();
-      pastQuery.with(Sort.by(Sort.Direction.DESC, "eventStartDate")); // Sort past events by start date in descending
-                                                                      // order
+      pastQuery.with(Sort.by(Sort.Direction.DESC, "eventStartDate")); // Sort past events by start date in descending order
       pastQuery.addCriteria(Criteria.where("eventStartDate").lt(LocalDate.now()));
       pastQuery.limit(pastEventsLimit); // Limit the number of returned past events
 
@@ -86,6 +91,17 @@ public class CSSAEventRepository {
     events.sort(Comparator.comparing(CSSAEvent::getEventStartDate));
 
     return events;
+  }
+
+  public Map<Integer, List<CSSAEvent>> findAllEventsByYear() {
+    Map<Integer, List<CSSAEvent>> eventsMapByYear = new HashMap<Integer, List<CSSAEvent>>();
+
+
+    List<CSSAEvent> allEvents = findAll();
+
+    eventsMapByYear = allEvents.stream().collect(Collectors.groupingBy(event -> (Integer) Year.from(event.getEventStartDate()).getValue(), HashMap::new, Collectors.toList()));
+  
+    return eventsMapByYear;
   }
 
 }
