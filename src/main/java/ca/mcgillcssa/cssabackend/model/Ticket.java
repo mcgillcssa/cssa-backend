@@ -13,6 +13,6 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "ticketName") // Ensure uniqueness based on ticketName
 public class Ticket {
   private String ticketName;
-  private int earlyBirdNum;
-  private int regularNum;
+  private Integer earlyBirdNum;
+  private Integer regularNum;
 }

@@ -9,8 +9,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class TicketDTO {
   private String ticketName;
-  private int earlyBirdNum;
-  private int regularNum;
+  private Integer earlyBirdNum;
+  private Integer regularNum;
 
   public TicketDTO(Ticket ticket) {
     this.ticketName = ticket.getTicketName();
