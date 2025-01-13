@@ -8,14 +8,20 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TicketDTO {
+  private String id;
   private String ticketName;
-  private Integer earlyBirdNum;
-  private Integer regularNum;
+  private int earlyBirdTotal;
+  private int earlyBirdRemain;
+  private int regularTotal;
+  private int regularRemain;
 
   public TicketDTO(Ticket ticket) {
+    this.id = ticket.getId();
     this.ticketName = ticket.getTicketName();
-    this.earlyBirdNum = ticket.getEarlyBirdNum();
-    this.regularNum = ticket.getRegularNum();
+    this.earlyBirdTotal = ticket.getEarlyBirdTotal();
+    this.earlyBirdRemain = ticket.getEarlyBirdRemain();
+    this.regularTotal = ticket.getRegularTotal();
+    this.regularRemain = ticket.getRegularRemain();
   }
 }
 
