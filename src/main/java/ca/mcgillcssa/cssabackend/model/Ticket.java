@@ -1,6 +1,5 @@
 package ca.mcgillcssa.cssabackend.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,10 +10,8 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode(of = "id") // Ensure uniqueness based on ticketName
+@EqualsAndHashCode(of = "ticketName") // Ensure uniqueness based on ticketName
 public class Ticket {
-  @Id
-  private String id;
   private String ticketName;
   private int earlyBirdTotal;
   private int earlyBirdRemain;
