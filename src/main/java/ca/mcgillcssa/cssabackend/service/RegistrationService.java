@@ -63,14 +63,12 @@ public class RegistrationService {
       throw new IllegalArgumentException("Nothing to be changed.");
     }
 
-    existingTicket.setEarlyBirdTotal(earlyBirdTotal);
-    existingTicket.setEarlyBirdRemain(earlyBirdRemain);
-    existingTicket.setRegularTotal(regularTotal);
-    existingTicket.setRegularRemain(regularRemain);
+    if (earlyBirdTotal != null) existingTicket.setEarlyBirdTotal(earlyBirdTotal);
+    if (earlyBirdRemain != null) existingTicket.setEarlyBirdRemain(earlyBirdRemain);
+    if (regularTotal != null) existingTicket.setRegularTotal(regularTotal);
+    if (regularRemain != null) existingTicket.setRegularRemain(regularRemain);
 
-    ticketRepository.deleteByTicketName(ticketName);
     ticketRepository.saveTicket(existingTicket);
-
     return true;
   }
 
@@ -150,6 +148,7 @@ public class RegistrationService {
     if (ticket.getEarlyBirdRemain() <= 0)
       throw new IllegalArgumentException("No enough EarlyBird tickets.");
     ticket.setEarlyBirdRemain(ticket.getEarlyBirdRemain() - 1);
+    ticketRepository.saveTicket(ticket);
     return true;
   }
 
@@ -160,6 +159,7 @@ public class RegistrationService {
     if (ticket.getRegularRemain() <= 0)
       throw new IllegalArgumentException("No enough Regular tickets.");
     ticket.setRegularRemain(ticket.getRegularRemain() - 1);
+    ticketRepository.saveTicket(ticket);
     return true;
   }
 
