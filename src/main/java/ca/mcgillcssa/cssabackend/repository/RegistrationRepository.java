@@ -30,6 +30,11 @@ public class RegistrationRepository {
     return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
   }
 
+  public Optional<Registration> findByTicketName(String ticketName) {
+    Query query = new Query(Criteria.where("ticketName").is(ticketName));
+    return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
+  }
+
   public Optional<Registration> findByEmail(String email) {
     Query query = new Query(Criteria.where("email").is(email));
     return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
@@ -46,6 +51,12 @@ public class RegistrationRepository {
 
   public boolean deleteByName(String name) {
     Query query = new Query(Criteria.where("name").is(name));
+    DeleteResult result = mongoTemplate.remove(query, Registration.class);
+    return result.wasAcknowledged() && result.getDeletedCount() > 0;
+  }
+
+  public boolean deleteByTicketName(String ticketName) {
+    Query query = new Query(Criteria.where("ticketName").is(ticketName));
     DeleteResult result = mongoTemplate.remove(query, Registration.class);
     return result.wasAcknowledged() && result.getDeletedCount() > 0;
   }

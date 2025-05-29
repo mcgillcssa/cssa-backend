@@ -23,18 +23,19 @@ public class RegistrationService {
     this.registrationRepository = registrationRepository;
   }
 
-  public Ticket createTicket(String ticketName, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer regularTotal, Integer regularRemain) {
-    if (ticketName == null || earlyBirdTotal == null || earlyBirdRemain == null || regularTotal == null || regularRemain == null) {
-      throw new IllegalArgumentException("Ticket Name and Number of Tickets are required.");
+  public Ticket createTicket(String ticketName, LocalDate ticketDate, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer earlyBirdPrice, Integer regularTotal, Integer regularRemain, Integer regularPrice) {
+    if (ticketName == null || earlyBirdTotal == null || earlyBirdRemain == null || earlyBirdPrice == null || regularTotal == null || regularRemain == null || regularPrice == null) {
+      throw new IllegalArgumentException("Ticket Name and Number/Prices of Tickets are required.");
     }
-    if (earlyBirdTotal < 0 || earlyBirdRemain < 0 || regularTotal < 0 || regularRemain < 0) {
+    if (ticketDate == null) ticketDate = LocalDate.now();
+    if (earlyBirdTotal < 0 || earlyBirdRemain < 0 || earlyBirdPrice < 0 || regularTotal < 0 || regularRemain < 0 || regularPrice < 0) {
       throw new IllegalArgumentException("Number of tickets should be equal or greater than 0.");
     }
     if (findByTicketName(ticketName).isPresent()) {
       throw new IllegalArgumentException("A ticket with the name " + ticketName + " already exists.");
     }
 
-    Ticket newTicket = new Ticket(ticketName, earlyBirdTotal, earlyBirdRemain, regularTotal, regularRemain);
+    Ticket newTicket = new Ticket(ticketName, ticketDate, earlyBirdTotal, earlyBirdRemain, earlyBirdPrice, regularTotal, regularRemain, regularPrice);
     return ticketRepository.saveTicket(newTicket);
   }
 
@@ -54,35 +55,42 @@ public class RegistrationService {
     return ticketRepository.deleteAll();
   }
 
-  public boolean updateTicket(String ticketName, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer regularTotal, Integer regularRemain) {
+  public boolean updateTicket(String ticketName, LocalDate ticketDate, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer earlyBirdPrice, Integer regularTotal, Integer regularRemain, Integer regularPrice) {
     Ticket existingTicket = findByTicketName(ticketName)
         .orElseThrow(
             () -> new IllegalArgumentException("Ticket with name " + ticketName + " does not exist."));
 
-    if (earlyBirdTotal.equals(existingTicket.getEarlyBirdTotal()) && earlyBirdRemain.equals(existingTicket.getEarlyBirdRemain()) && regularTotal.equals(existingTicket.getRegularTotal()) && regularRemain.equals(existingTicket.getRegularRemain())) {
+    if (ticketDate.equals(existingTicket.getTicketDate()) && earlyBirdTotal.equals(existingTicket.getEarlyBirdTotal()) && earlyBirdRemain.equals(existingTicket.getEarlyBirdRemain()) && earlyBirdPrice.equals(existingTicket.getEarlyBirdPrice()) && regularTotal.equals(existingTicket.getRegularTotal()) && regularRemain.equals(existingTicket.getRegularRemain()) && regularPrice.equals(existingTicket.getRegularPrice())) {
       throw new IllegalArgumentException("Nothing to be changed.");
     }
 
+    if (ticketDate != null) existingTicket.setTicketDate(ticketDate);
     if (earlyBirdTotal != null) existingTicket.setEarlyBirdTotal(earlyBirdTotal);
     if (earlyBirdRemain != null) existingTicket.setEarlyBirdRemain(earlyBirdRemain);
+    if (earlyBirdPrice != null) existingTicket.setEarlyBirdPrice(earlyBirdPrice);
     if (regularTotal != null) existingTicket.setRegularTotal(regularTotal);
     if (regularRemain != null) existingTicket.setRegularRemain(regularRemain);
+    if (regularPrice != null) existingTicket.setRegularPrice(regularPrice);;
 
     ticketRepository.saveTicket(existingTicket);
     return true;
   }
 
-  public Registration createRegistration(String id, String name, String email, String wechatId, LocalDate registrationDate, RegistrationType registrationType) {
-    if (name == null || email == null || registrationDate == null || registrationType == null) {
-      throw new IllegalArgumentException("Name, Email, RegistrationDate and RegistrationType are required.");
+  public Registration createRegistration(String name, String ticketName, String email, String wechatId, LocalDate registrationDate, RegistrationType registrationType) {
+    if (name == null || ticketName == null || email == null ||  registrationType == null) {
+      throw new IllegalArgumentException("Name, TicketName, Email, RegistrationDate and RegistrationType are required.");
     }
-
-    Registration newRegistration = new Registration(id, name, email, wechatId, registrationDate, registrationType);
+    if (registrationDate == null) registrationDate = LocalDate.now();
+    Registration newRegistration = new Registration(name, ticketName, email, wechatId, registrationDate, registrationType);
     return registrationRepository.saveRegistration(newRegistration);
   }
 
   public Optional<Registration> findByName(String name) {
     return registrationRepository.findByName(name);
+  }
+
+  public Optional<Registration> findRByTicketName(String ticketName) {
+    return registrationRepository.findByTicketName(ticketName);
   }
 
   public Optional<Registration> findByEmail(String email) {
@@ -101,6 +109,10 @@ public class RegistrationService {
     return registrationRepository.deleteByName(name);
   }
 
+  public boolean deleteRByTicketName(String ticketName) {
+    return registrationRepository.deleteByTicketName(ticketName);
+  }
+
   public boolean deleteByEmail(String email) {
     return registrationRepository.deleteByEmail(email);
   }
@@ -111,6 +123,13 @@ public class RegistrationService {
 
   public boolean deleteAllRegistrations() {
     return registrationRepository.deleteAll();
+  }
+
+  public LocalDate getTicketDate(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getTicketDate();
   }
 
   public int getEarlyBirdTotal(String ticketName) {
@@ -127,6 +146,13 @@ public class RegistrationService {
     return ticket.getEarlyBirdRemain();
   }
 
+  public int getEarlyBirdPrice(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getEarlyBirdPrice();
+  }
+
   public int getRegularTotal(String ticketName) {
     Ticket ticket = findByTicketName(ticketName)
         .orElseThrow(
@@ -141,7 +167,15 @@ public class RegistrationService {
     return ticket.getRegularRemain();
   }
 
-  public boolean purchaseEarlyBird(String ticketName) {
+  public int getRegularPrice(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getRegularPrice();
+  }
+
+  public boolean purchaseEarlyBird(String ticketName, String buyerName, String email, String wechatId, LocalDate registrationDate) {
+
     Ticket ticket = findByTicketName(ticketName)
         .orElseThrow(
             () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
@@ -149,10 +183,14 @@ public class RegistrationService {
       throw new IllegalArgumentException("No enough EarlyBird tickets.");
     ticket.setEarlyBirdRemain(ticket.getEarlyBirdRemain() - 1);
     ticketRepository.saveTicket(ticket);
+
+    createRegistration(buyerName, ticketName, email, wechatId, registrationDate, RegistrationType.EARLYBIRD);
+
     return true;
   }
 
-  public boolean purchaseRegular(String ticketName) {
+  public boolean purchaseRegular(String ticketName, String buyerName, String email, String wechatId, LocalDate registrationDate) {
+
     Ticket ticket = findByTicketName(ticketName)
         .orElseThrow(
             () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
@@ -160,6 +198,9 @@ public class RegistrationService {
       throw new IllegalArgumentException("No enough Regular tickets.");
     ticket.setRegularRemain(ticket.getRegularRemain() - 1);
     ticketRepository.saveTicket(ticket);
+
+    createRegistration(buyerName, ticketName, email, wechatId, registrationDate, RegistrationType.REGULAR);
+
     return true;
   }
 

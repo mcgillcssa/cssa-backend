@@ -1,5 +1,7 @@
 package ca.mcgillcssa.cssabackend.model;
 
+import java.time.LocalDate;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
@@ -15,9 +17,12 @@ import lombok.ToString;
 public class Ticket {
   @Id
   private String ticketName;
+  private LocalDate ticketDate;
 
   private int earlyBirdTotal;
   private int earlyBirdRemain;
+  private int earlyBirdPrice;
   private int regularTotal;
   private int regularRemain;
+  private int regularPrice;
 }

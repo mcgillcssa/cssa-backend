@@ -15,8 +15,8 @@ import lombok.ToString;
 @ToString
 public class Registration {
   @Id
-  private String id;
   private String name;
+  private String ticketName;
   private String email;
   private String wechatId;
   private LocalDate registrationDate;
