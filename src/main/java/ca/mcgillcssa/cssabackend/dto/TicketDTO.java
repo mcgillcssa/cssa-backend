@@ -1,5 +1,7 @@
 package ca.mcgillcssa.cssabackend.dto;
 
+import java.time.LocalDate;
+
 import ca.mcgillcssa.cssabackend.model.Ticket;
 
 import lombok.AllArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class TicketDTO {
   private String ticketName;
-  private String ticketDate;
+  private LocalDate ticketDate;
 
   private int earlyBirdTotal;
   private int earlyBirdRemain;
@@ -20,7 +22,7 @@ public class TicketDTO {
 
   public TicketDTO(Ticket ticket) {
     this.ticketName = ticket.getTicketName();
-    this.ticketDate = ticket.getTicketDate().toString();
+    this.ticketDate = ticket.getTicketDate();
 
     this.earlyBirdTotal = ticket.getEarlyBirdTotal();
     this.earlyBirdRemain = ticket.getEarlyBirdRemain();

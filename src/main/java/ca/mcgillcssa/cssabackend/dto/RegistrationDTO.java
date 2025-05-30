@@ -1,7 +1,9 @@
 package ca.mcgillcssa.cssabackend.dto;
 
-import ca.mcgillcssa.cssabackend.model.Registration;
+import java.time.LocalDate;
 
+import ca.mcgillcssa.cssabackend.model.Registration;
+import ca.mcgillcssa.cssabackend.model.Registration.RegistrationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,16 +14,16 @@ public class RegistrationDTO {
   private String ticketName;
   private String email;
   private String wechatId;
-  private String registrationDate;
-  private String registrationType;
+  private LocalDate registrationDate;
+  private RegistrationType registrationType;
 
   public RegistrationDTO(Registration registration) {
     this.name = registration.getName();
     this.ticketName = registration.getTicketName();
     this.email = registration.getEmail();
     this.wechatId = registration.getWechatId();
-    this.registrationDate = registration.getRegistrationDate().toString();
-    this.registrationType = registration.getRegistrationType().toString();
+    this.registrationDate = registration.getRegistrationDate();
+    this.registrationType = registration.getRegistrationType();
   }
 }
 

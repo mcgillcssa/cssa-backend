@@ -1,5 +1,6 @@
 package ca.mcgillcssa.cssabackend.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public class RegistrationService {
     this.registrationRepository = registrationRepository;
   }
 
-  public Ticket createTicket(String ticketName, LocalDate ticketDate, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer earlyBirdPrice, Integer regularTotal, Integer regularRemain, Integer regularPrice) {
+  public Ticket createTicket(String ticketName, LocalDate ticketDate, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer earlyBirdPrice, Integer regularTotal, Integer regularRemain, Integer regularPrice) throws IOException {
     if (ticketName == null || earlyBirdTotal == null || earlyBirdRemain == null || earlyBirdPrice == null || regularTotal == null || regularRemain == null || regularPrice == null) {
       throw new IllegalArgumentException("Ticket Name and Number/Prices of Tickets are required.");
     }
@@ -55,13 +56,17 @@ public class RegistrationService {
     return ticketRepository.deleteAll();
   }
 
-  public boolean updateTicket(String ticketName, LocalDate ticketDate, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer earlyBirdPrice, Integer regularTotal, Integer regularRemain, Integer regularPrice) {
+  public boolean updateTicket(String ticketName, LocalDate ticketDate, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer earlyBirdPrice, Integer regularTotal, Integer regularRemain, Integer regularPrice) throws IOException {
     Ticket existingTicket = findByTicketName(ticketName)
         .orElseThrow(
             () -> new IllegalArgumentException("Ticket with name " + ticketName + " does not exist."));
 
     if (ticketDate.equals(existingTicket.getTicketDate()) && earlyBirdTotal.equals(existingTicket.getEarlyBirdTotal()) && earlyBirdRemain.equals(existingTicket.getEarlyBirdRemain()) && earlyBirdPrice.equals(existingTicket.getEarlyBirdPrice()) && regularTotal.equals(existingTicket.getRegularTotal()) && regularRemain.equals(existingTicket.getRegularRemain()) && regularPrice.equals(existingTicket.getRegularPrice())) {
       throw new IllegalArgumentException("Nothing to be changed.");
+    }
+
+    if ((earlyBirdTotal != null && earlyBirdTotal < 0) || (earlyBirdRemain != null && earlyBirdRemain < 0) || (earlyBirdPrice != null && earlyBirdPrice < 0) || (regularTotal != null && regularTotal < 0) || (regularRemain != null && regularRemain < 0) || (regularPrice != null && regularPrice < 0)) {
+      throw new IllegalArgumentException("Number of tickets should be equal or greater than 0.");
     }
 
     if (ticketDate != null) existingTicket.setTicketDate(ticketDate);
@@ -76,28 +81,35 @@ public class RegistrationService {
     return true;
   }
 
-  public Registration createRegistration(String name, String ticketName, String email, String wechatId, LocalDate registrationDate, RegistrationType registrationType) {
+  public Registration createRegistration(String name, String ticketName, String email, String wechatId, LocalDate registrationDate, RegistrationType registrationType) throws IOException {
     if (name == null || ticketName == null || email == null ||  registrationType == null) {
       throw new IllegalArgumentException("Name, TicketName, Email, RegistrationDate and RegistrationType are required.");
+    }
+    if (!findByTicketName(ticketName).isPresent()) {
+      throw new IllegalArgumentException("A ticket with the name " + ticketName + " doesn't exist.");
     }
     if (registrationDate == null) registrationDate = LocalDate.now();
     Registration newRegistration = new Registration(name, ticketName, email, wechatId, registrationDate, registrationType);
     return registrationRepository.saveRegistration(newRegistration);
   }
 
-  public Optional<Registration> findByName(String name) {
+  public List<Registration> findByName(String name) {
     return registrationRepository.findByName(name);
   }
 
-  public Optional<Registration> findRByTicketName(String ticketName) {
+  public List<Registration> findRByTicketName(String ticketName) {
     return registrationRepository.findByTicketName(ticketName);
   }
 
-  public Optional<Registration> findByEmail(String email) {
+  public Optional<Registration> findByNameAndTicketName(String name, String ticketName) {
+    return registrationRepository.findByNameAndTicketName(name, ticketName);
+  }
+
+  public List<Registration> findByEmail(String email) {
     return registrationRepository.findByEmail(email);
   }
 
-  public Optional<Registration> findByWechatId(String wechatId) {
+  public List<Registration> findByWechatId(String wechatId) {
     return registrationRepository.findByWechatId(wechatId);
   }
 
@@ -111,6 +123,10 @@ public class RegistrationService {
 
   public boolean deleteRByTicketName(String ticketName) {
     return registrationRepository.deleteByTicketName(ticketName);
+  }
+
+  public boolean deleteByNameAndTicketName(String name, String ticketName) {
+    return registrationRepository.deleteByNameAndTicketName(name, ticketName);
   }
 
   public boolean deleteByEmail(String email) {
@@ -174,7 +190,26 @@ public class RegistrationService {
     return ticket.getRegularPrice();
   }
 
-  public boolean purchaseEarlyBird(String ticketName, String buyerName, String email, String wechatId, LocalDate registrationDate) {
+  public boolean updateRegistration(String name, String ticketName, String email, String wechatId, LocalDate registrationDate, RegistrationType registrationType) throws IOException {
+    Registration existingRegistration = findByNameAndTicketName(name, ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException(name + ", registration for " + ticketName + " does not exist."));
+
+    if (email.equals(existingRegistration.getEmail()) && wechatId.equals(existingRegistration.getWechatId()) && registrationDate.equals(existingRegistration.getRegistrationDate()) && registrationType.equals(existingRegistration.getRegistrationType())) {
+      throw new IllegalArgumentException("Nothing to be changed.");
+    }
+
+    if (email != null) existingRegistration.setEmail(email);
+    if (wechatId!= null) existingRegistration.setWechatId(wechatId);
+    if (registrationDate!= null) existingRegistration.setRegistrationDate(registrationDate);
+    if (registrationType!= null) existingRegistration.setRegistrationType(registrationType);
+
+    registrationRepository.saveRegistration(existingRegistration);
+
+    return true;
+  }
+
+  public boolean purchaseEarlyBird(String ticketName, String buyerName, String email, String wechatId, LocalDate registrationDate) throws IOException {
 
     Ticket ticket = findByTicketName(ticketName)
         .orElseThrow(
@@ -189,7 +224,7 @@ public class RegistrationService {
     return true;
   }
 
-  public boolean purchaseRegular(String ticketName, String buyerName, String email, String wechatId, LocalDate registrationDate) {
+  public boolean purchaseRegular(String ticketName, String buyerName, String email, String wechatId, LocalDate registrationDate) throws IOException {
 
     Ticket ticket = findByTicketName(ticketName)
         .orElseThrow(

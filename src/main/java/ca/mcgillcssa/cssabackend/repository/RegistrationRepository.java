@@ -25,24 +25,31 @@ public class RegistrationRepository {
     return mongoTemplate.save(registration);
   }
 
-  public Optional<Registration> findByName(String name) {
+  public List<Registration> findByName(String name) {
     Query query = new Query(Criteria.where("name").is(name));
-    return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
+    return mongoTemplate.find(query, Registration.class);
   }
 
-  public Optional<Registration> findByTicketName(String ticketName) {
+  public List<Registration> findByTicketName(String ticketName) {
     Query query = new Query(Criteria.where("ticketName").is(ticketName));
-    return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
+    return mongoTemplate.find(query, Registration.class);
   }
 
-  public Optional<Registration> findByEmail(String email) {
+  public Optional<Registration> findByNameAndTicketName(String name, String ticketName) {
+    Query query = new Query();
+    query.addCriteria(Criteria.where("name").is(name));
+    query.addCriteria(Criteria.where("ticketName").is(ticketName));
+    return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
+}
+
+  public List<Registration> findByEmail(String email) {
     Query query = new Query(Criteria.where("email").is(email));
-    return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
+    return mongoTemplate.find(query, Registration.class);
   }
 
-  public Optional<Registration> findByWechatId(String wechatId) {
+  public List<Registration> findByWechatId(String wechatId) {
     Query query = new Query(Criteria.where("wechatId").is(wechatId));
-    return Optional.ofNullable(mongoTemplate.findOne(query, Registration.class));
+    return mongoTemplate.find(query, Registration.class);
   }
 
   public List<Registration> findAll() {
@@ -57,6 +64,14 @@ public class RegistrationRepository {
 
   public boolean deleteByTicketName(String ticketName) {
     Query query = new Query(Criteria.where("ticketName").is(ticketName));
+    DeleteResult result = mongoTemplate.remove(query, Registration.class);
+    return result.wasAcknowledged() && result.getDeletedCount() > 0;
+  }
+
+  public boolean deleteByNameAndTicketName(String name, String ticketName) {
+    Query query = new Query();
+    query.addCriteria(Criteria.where("name").is(name));
+    query.addCriteria(Criteria.where("ticketName").is(ticketName));
     DeleteResult result = mongoTemplate.remove(query, Registration.class);
     return result.wasAcknowledged() && result.getDeletedCount() > 0;
   }
