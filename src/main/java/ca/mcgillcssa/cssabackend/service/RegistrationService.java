@@ -56,6 +56,56 @@ public class RegistrationService {
     return ticketRepository.deleteAll();
   }
 
+  public LocalDate getTicketDate(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getTicketDate();
+  }
+
+  public int getEarlyBirdTotal(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getEarlyBirdTotal();
+  }
+
+  public int getEarlyBirdRemain(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getEarlyBirdRemain();
+  }
+
+  public int getEarlyBirdPrice(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getEarlyBirdPrice();
+  }
+
+  public int getRegularTotal(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getRegularTotal();
+  }
+
+  public int getRegularRemain(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getRegularRemain();
+  }
+
+  public int getRegularPrice(String ticketName) {
+    Ticket ticket = findByTicketName(ticketName)
+        .orElseThrow(
+            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
+    return ticket.getRegularPrice();
+  }
+
+  /*
   public boolean updateTicket(String ticketName, LocalDate ticketDate, Integer earlyBirdTotal, Integer earlyBirdRemain, Integer earlyBirdPrice, Integer regularTotal, Integer regularRemain, Integer regularPrice) throws IOException {
     Ticket existingTicket = findByTicketName(ticketName)
         .orElseThrow(
@@ -80,6 +130,7 @@ public class RegistrationService {
     ticketRepository.saveTicket(existingTicket);
     return true;
   }
+  */
 
   public Registration createRegistration(String name, String ticketName, String email, String wechatId, LocalDate registrationDate, RegistrationType registrationType) throws IOException {
     if (name == null || ticketName == null || email == null ||  registrationType == null) {
@@ -141,55 +192,7 @@ public class RegistrationService {
     return registrationRepository.deleteAll();
   }
 
-  public LocalDate getTicketDate(String ticketName) {
-    Ticket ticket = findByTicketName(ticketName)
-        .orElseThrow(
-            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
-    return ticket.getTicketDate();
-  }
-
-  public int getEarlyBirdTotal(String ticketName) {
-    Ticket ticket = findByTicketName(ticketName)
-        .orElseThrow(
-            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
-    return ticket.getEarlyBirdTotal();
-  }
-
-  public int getEarlyBirdRemain(String ticketName) {
-    Ticket ticket = findByTicketName(ticketName)
-        .orElseThrow(
-            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
-    return ticket.getEarlyBirdRemain();
-  }
-
-  public int getEarlyBirdPrice(String ticketName) {
-    Ticket ticket = findByTicketName(ticketName)
-        .orElseThrow(
-            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
-    return ticket.getEarlyBirdPrice();
-  }
-
-  public int getRegularTotal(String ticketName) {
-    Ticket ticket = findByTicketName(ticketName)
-        .orElseThrow(
-            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
-    return ticket.getRegularTotal();
-  }
-
-  public int getRegularRemain(String ticketName) {
-    Ticket ticket = findByTicketName(ticketName)
-        .orElseThrow(
-            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
-    return ticket.getRegularRemain();
-  }
-
-  public int getRegularPrice(String ticketName) {
-    Ticket ticket = findByTicketName(ticketName)
-        .orElseThrow(
-            () -> new IllegalArgumentException("Ticket type '" + ticketName + "' does not exist."));
-    return ticket.getRegularPrice();
-  }
-
+  /*
   public boolean updateRegistration(String name, String ticketName, String email, String wechatId, LocalDate registrationDate, RegistrationType registrationType) throws IOException {
     Registration existingRegistration = findByNameAndTicketName(name, ticketName)
         .orElseThrow(
@@ -208,6 +211,7 @@ public class RegistrationService {
 
     return true;
   }
+  */
 
   public boolean purchaseEarlyBird(String ticketName, String buyerName, String email, String wechatId, LocalDate registrationDate) throws IOException {
 

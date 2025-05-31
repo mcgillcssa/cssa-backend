@@ -2,7 +2,6 @@ package ca.mcgillcssa.cssabackend.model;
 
 import java.time.LocalDate;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +14,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = "ticketName") // Ensure uniqueness based on ticketName
 public class Ticket {
-  @Id
   private String ticketName;
   private LocalDate ticketDate;
 

@@ -2,7 +2,6 @@ package ca.mcgillcssa.cssabackend.model;
 
 import java.time.LocalDate;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +13,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Registration {
-  @Id
   private String name;
   private String ticketName;
   private String email;
